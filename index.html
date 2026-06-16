@@ -1,0 +1,1727 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InNovaIdeia — Consultoria, Desenvolvimento e Treinamentos em Tecnologia</title>
+  <meta name="description" content="InNovaIdeia transforma desafios em soluções tecnológicas através de consultoria, desenvolvimento de software sob medida e treinamentos em IA." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=DM+Sans:wght@400;500&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    /* ══════════════════════════════════════════
+       TOKENS — cores, tipografia, espaçamentos
+    ══════════════════════════════════════════ */
+    :root {
+      --bg-main:       #0A0F1E;
+      --bg-alt:        #111827;
+      --bg-card:       #131C2E;
+      --accent-teal:   #00B4D8;
+      --accent-violet: #7C3AED;
+      --accent-glow:   rgba(0,180,216,0.15);
+      --text-primary:  #F0F4F8;
+      --text-muted:    #94A3B8;
+      --border:        #1E293B;
+      --font-display:  'Space Grotesk', sans-serif;
+      --font-body:     'DM Sans', sans-serif;
+      --font-mono:     'JetBrains Mono', monospace;
+      --radius:        10px;
+      --transition:    0.25s ease;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    /* ══════════════════════════════════════════
+       UTILITÁRIOS
+    ══════════════════════════════════════════ */
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    .section {
+      padding: 96px 0;
+    }
+
+    .section-alt {
+      background: var(--bg-alt);
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent-teal);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .section-title {
+      font-family: var(--font-display);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+
+    .section-sub {
+      color: var(--text-muted);
+      font-size: 18px;
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    .teal { color: var(--accent-teal); }
+    .violet { color: var(--accent-violet); }
+
+    /* Scroll reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ══════════════════════════════════════════
+       NAVBAR
+    ══════════════════════════════════════════ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      padding: 20px 0;
+      transition: background var(--transition), backdrop-filter var(--transition), box-shadow var(--transition);
+    }
+
+    #navbar.scrolled {
+      background: rgba(10,15,30,0.92);
+      backdrop-filter: blur(12px);
+      box-shadow: 0 1px 0 var(--border);
+      padding: 14px 0;
+    }
+
+    .nav-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: 22px;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-logo span { color: var(--accent-teal); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--text-primary); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 22px;
+      border-radius: var(--radius);
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all var(--transition);
+      border: none;
+    }
+
+    .btn-outline {
+      border: 1.5px solid var(--accent-teal);
+      color: var(--accent-teal);
+      background: transparent;
+    }
+
+    .btn-outline:hover {
+      background: var(--accent-teal);
+      color: #0A0F1E;
+    }
+
+    .btn-solid {
+      background: var(--accent-teal);
+      color: #0A0F1E;
+    }
+
+    .btn-solid:hover {
+      background: #00caf0;
+      transform: translateY(-1px);
+      box-shadow: 0 8px 24px rgba(0,180,216,0.3);
+    }
+
+    .btn-ghost {
+      border: 1.5px solid var(--border);
+      color: var(--text-primary);
+      background: transparent;
+    }
+
+    .btn-ghost:hover {
+      border-color: var(--text-muted);
+      background: rgba(255,255,255,0.04);
+    }
+
+    /* Hamburger */
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 4px;
+      background: none;
+      border: none;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: all 0.3s ease;
+    }
+
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    /* Mobile menu */
+    .nav-mobile {
+      display: none;
+      flex-direction: column;
+      gap: 0;
+      background: rgba(10,15,30,0.97);
+      border-top: 1px solid var(--border);
+      padding: 8px 0 20px;
+    }
+
+    .nav-mobile.open { display: flex; }
+
+    .nav-mobile a {
+      padding: 14px 24px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      font-weight: 500;
+      transition: color var(--transition);
+    }
+
+    .nav-mobile a:hover { color: var(--accent-teal); }
+
+    .nav-mobile .btn {
+      margin: 12px 24px 0;
+      justify-content: center;
+    }
+
+    /* ══════════════════════════════════════════
+       HERO
+    ══════════════════════════════════════════ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 80px;
+    }
+
+    /* Partículas de fundo */
+    #hero-canvas {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.4;
+    }
+
+    /* Linha de assinatura diagonal — o elemento único da InNovaIdeia */
+    .hero-signature-line {
+      position: absolute;
+      top: 30%;
+      left: -10%;
+      width: 120%;
+      height: 2px;
+      background: linear-gradient(90deg, transparent 0%, var(--accent-teal) 30%, var(--accent-violet) 70%, transparent 100%);
+      transform: rotate(-8deg);
+      animation: signatureDraw 1.4s ease-out forwards;
+      transform-origin: left center;
+      opacity: 0.25;
+      z-index: 0;
+    }
+
+    @keyframes signatureDraw {
+      from { clip-path: inset(0 100% 0 0); opacity: 0; }
+      to   { clip-path: inset(0 0% 0 0);   opacity: 0.25; }
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      max-width: 760px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 14px;
+      border: 1px solid rgba(0,180,216,0.3);
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--accent-teal);
+      background: rgba(0,180,216,0.07);
+      margin-bottom: 28px;
+      animation: fadeUp 0.7s ease 0.1s both;
+    }
+
+    .hero-title {
+      font-family: var(--font-display);
+      font-size: clamp(38px, 6vw, 68px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.08;
+      margin-bottom: 24px;
+      animation: fadeUp 0.7s ease 0.25s both;
+    }
+
+    .hero-title .highlight {
+      background: linear-gradient(135deg, var(--accent-teal), var(--accent-violet));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-sub {
+      font-size: clamp(16px, 2vw, 19px);
+      color: var(--text-muted);
+      max-width: 580px;
+      margin-bottom: 40px;
+      line-height: 1.7;
+      animation: fadeUp 0.7s ease 0.4s both;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      animation: fadeUp 0.7s ease 0.55s both;
+    }
+
+    .hero-actions .btn { font-size: 15px; padding: 13px 28px; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ══════════════════════════════════════════
+       SOBRE
+    ══════════════════════════════════════════ */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 72px;
+      align-items: center;
+    }
+
+    .about-text p {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-size: 17px;
+      line-height: 1.75;
+    }
+
+    .about-text p strong { color: var(--text-primary); }
+
+    .stats-row {
+      display: flex;
+      gap: 32px;
+      margin-top: 40px;
+      flex-wrap: wrap;
+    }
+
+    .stat-item { text-align: left; }
+
+    .stat-number {
+      font-family: var(--font-display);
+      font-size: 36px;
+      font-weight: 700;
+      color: var(--accent-teal);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .tech-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .tech-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-primary);
+      transition: border-color var(--transition), color var(--transition);
+    }
+
+    .tech-badge:hover {
+      border-color: var(--accent-teal);
+      color: var(--accent-teal);
+    }
+
+    .tech-badge .dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-teal);
+      flex-shrink: 0;
+    }
+
+    /* ══════════════════════════════════════════
+       SERVIÇOS
+    ══════════════════════════════════════════ */
+    .services-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .services-header .section-sub { margin: 0 auto; }
+
+    .services-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .service-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 36px 30px;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .service-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-teal), var(--accent-violet));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+
+    .service-card:hover {
+      border-color: rgba(0,180,216,0.4);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.35);
+    }
+
+    .service-card:hover::before { transform: scaleX(1); }
+
+    .service-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--accent-glow);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 22px;
+    }
+
+    .service-icon svg { width: 24px; height: 24px; stroke: var(--accent-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    .service-card h3 {
+      font-family: var(--font-display);
+      font-size: 19px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .service-card p {
+      color: var(--text-muted);
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .services-cta {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    .services-cta a {
+      color: var(--accent-teal);
+      text-decoration: none;
+      font-weight: 500;
+      transition: opacity var(--transition);
+    }
+
+    .services-cta a:hover { opacity: 0.75; }
+
+    /* ══════════════════════════════════════════
+       PROJETOS
+    ══════════════════════════════════════════ */
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .project-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      overflow: hidden;
+      transition: border-color var(--transition), transform var(--transition), box-shadow var(--transition);
+    }
+
+    .project-card:hover {
+      border-color: rgba(0,180,216,0.35);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 40px rgba(0,0,0,0.4);
+    }
+
+    .project-thumb {
+      height: 160px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-thumb-bg {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .project-thumb-icon {
+      font-size: 48px;
+      opacity: 0.9;
+      filter: drop-shadow(0 0 16px rgba(0,0,0,0.5));
+    }
+
+    .project-body {
+      padding: 24px;
+    }
+
+    .project-body h3 {
+      font-family: var(--font-display);
+      font-size: 17px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      letter-spacing: -0.01em;
+    }
+
+    .project-body p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 16px;
+    }
+
+    .project-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 18px;
+    }
+
+    .tag {
+      padding: 3px 10px;
+      background: rgba(0,180,216,0.08);
+      border: 1px solid rgba(0,180,216,0.2);
+      border-radius: 99px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--accent-teal);
+    }
+
+    .project-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .project-link:hover { color: var(--accent-teal); }
+
+    .projects-footer {
+      text-align: center;
+      margin-top: 48px;
+    }
+
+    /* ══════════════════════════════════════════
+       DIFERENCIAIS
+    ══════════════════════════════════════════ */
+    .diff-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .diff-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+    }
+
+    .diff-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 28px 24px;
+      transition: border-color var(--transition);
+    }
+
+    .diff-card:hover { border-color: rgba(124,58,237,0.4); }
+
+    .diff-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+      display: block;
+    }
+
+    .diff-card h4 {
+      font-family: var(--font-display);
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .diff-card p {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ══════════════════════════════════════════
+       CONTATO
+    ══════════════════════════════════════════ */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 72px;
+      align-items: start;
+    }
+
+    .contact-info h2 {
+      font-family: var(--font-display);
+      font-size: clamp(26px, 3.5vw, 38px);
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .contact-info p {
+      color: var(--text-muted);
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 36px;
+    }
+
+    .contact-links {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .contact-link-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 15px;
+      transition: color var(--transition);
+    }
+
+    .contact-link-item:hover { color: var(--accent-teal); }
+
+    .contact-link-item .link-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: border-color var(--transition);
+    }
+
+    .contact-link-item:hover .link-icon { border-color: var(--accent-teal); }
+
+    .contact-link-item .link-icon svg { width: 18px; height: 18px; stroke: var(--accent-teal); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Formulário */
+    .contact-form {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px 36px;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+    }
+
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg-alt);
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px 16px;
+      color: var(--text-primary);
+      font-family: var(--font-body);
+      font-size: 15px;
+      transition: border-color var(--transition), box-shadow var(--transition);
+      outline: none;
+      resize: none;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus {
+      border-color: var(--accent-teal);
+      box-shadow: 0 0 0 3px rgba(0,180,216,0.12);
+    }
+
+    .form-group input.error,
+    .form-group textarea.error {
+      border-color: #f87171;
+    }
+
+    .form-error-msg {
+      font-size: 12px;
+      color: #f87171;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-group input.error ~ .form-error-msg,
+    .form-group textarea.error ~ .form-error-msg { display: block; }
+
+    .form-group textarea { height: 120px; }
+
+    /* Interest toggles */
+    .interest-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-primary);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .interest-options {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .interest-btn {
+      padding: 8px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 99px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      background: transparent;
+      cursor: pointer;
+      transition: all var(--transition);
+    }
+
+    .interest-btn:hover {
+      border-color: var(--accent-teal);
+      color: var(--accent-teal);
+    }
+
+    .interest-btn.active {
+      border-color: var(--accent-teal);
+      background: rgba(0,180,216,0.1);
+      color: var(--accent-teal);
+    }
+
+    /* Char counter */
+    .char-counter {
+      text-align: right;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 5px;
+      font-family: var(--font-mono);
+    }
+
+    /* Checkbox */
+    .checkbox-group {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 24px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      accent-color: var(--accent-teal);
+      margin-top: 2px;
+      cursor: pointer;
+    }
+
+    .checkbox-group label {
+      font-size: 13px;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Submit */
+    .btn-submit {
+      width: 100%;
+      justify-content: center;
+      padding: 14px;
+      font-size: 15px;
+      position: relative;
+    }
+
+    .btn-submit .spinner {
+      width: 18px;
+      height: 18px;
+      border: 2px solid rgba(10,15,30,0.3);
+      border-top-color: #0A0F1E;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+      display: none;
+    }
+
+    .btn-submit.loading .spinner { display: block; }
+    .btn-submit.loading .btn-text { display: none; }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Mensagem de sucesso */
+    .form-success {
+      display: none;
+      text-align: center;
+      padding: 48px 24px;
+    }
+
+    .form-success.show { display: block; }
+
+    .success-icon {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .form-success h3 {
+      font-family: var(--font-display);
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    .form-success p {
+      color: var(--text-muted);
+      font-size: 15px;
+    }
+
+    /* ══════════════════════════════════════════
+       FOOTER
+    ══════════════════════════════════════════ */
+    footer {
+      background: var(--bg-main);
+      border-top: 1px solid var(--border);
+      padding: 60px 0 36px;
+    }
+
+    .footer-inner {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr 1fr;
+      gap: 48px;
+      margin-bottom: 48px;
+    }
+
+    .footer-brand .nav-logo { font-size: 20px; display: inline-block; margin-bottom: 14px; }
+
+    .footer-tagline {
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.65;
+      margin-bottom: 24px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 12px;
+    }
+
+    .social-btn {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      transition: all var(--transition);
+    }
+
+    .social-btn:hover {
+      border-color: var(--accent-teal);
+      background: rgba(0,180,216,0.1);
+    }
+
+    .social-btn svg { width: 18px; height: 18px; stroke: var(--text-muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke var(--transition); }
+    .social-btn:hover svg { stroke: var(--accent-teal); }
+
+    .footer-col h5 {
+      font-family: var(--font-display);
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 18px;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover { color: var(--accent-teal); }
+
+    .footer-bottom {
+      border-top: 1px solid var(--border);
+      padding-top: 28px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .footer-bottom p {
+      color: var(--text-muted);
+      font-size: 13px;
+    }
+
+    .footer-bottom .made-with {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* ══════════════════════════════════════════
+       RESPONSIVIDADE
+    ══════════════════════════════════════════ */
+    @media (max-width: 1024px) {
+      .diff-grid { grid-template-columns: repeat(2, 1fr); }
+      .projects-grid { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .section { padding: 72px 0; }
+      .nav-links, .nav-cta { display: none; }
+      .nav-toggle { display: flex; }
+      .about-grid { grid-template-columns: 1fr; gap: 48px; }
+      .services-grid { grid-template-columns: 1fr; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 48px; }
+      .contact-form { padding: 28px 22px; }
+      .form-row { grid-template-columns: 1fr; }
+      .footer-inner { grid-template-columns: 1fr; gap: 32px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    @media (max-width: 480px) {
+      .hero-actions { flex-direction: column; }
+      .hero-actions .btn { width: 100%; justify-content: center; }
+      .stats-row { gap: 24px; }
+      .diff-grid { grid-template-columns: 1fr; }
+      .projects-header { flex-direction: column; align-items: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ NAVBAR ═══════════════════ -->
+  <header>
+    <nav id="navbar" aria-label="Navegação principal">
+      <div class="container nav-inner">
+        <a href="#hero" class="nav-logo" aria-label="InNovaIdeia — início">InNova<span>Ideia</span></a>
+        <ul class="nav-links" role="list">
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#projetos">Projetos</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+        <a href="#contato" class="btn btn-outline nav-cta" aria-label="Ir para formulário de contato">Fale Conosco</a>
+        <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false" aria-controls="navMobile">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+      <div class="nav-mobile" id="navMobile" role="navigation" aria-label="Menu mobile">
+        <a href="#sobre" class="nav-mobile-link">Sobre</a>
+        <a href="#servicos" class="nav-mobile-link">Serviços</a>
+        <a href="#projetos" class="nav-mobile-link">Projetos</a>
+        <a href="#contato" class="nav-mobile-link">Contato</a>
+        <a href="#contato" class="btn btn-solid">Fale Conosco</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ═══════════════════ HERO ═══════════════════ -->
+    <section id="hero" aria-label="Apresentação">
+      <canvas id="hero-canvas" aria-hidden="true"></canvas>
+      <div class="hero-signature-line" aria-hidden="true"></div>
+      <div class="container">
+        <div class="hero-content">
+          <span class="hero-badge">⚡ +15 anos de experiência em tecnologia</span>
+          <h1 class="hero-title">
+            Tecnologia que resolve.<br>
+            <span class="highlight">Inovação que cresce.</span>
+          </h1>
+          <p class="hero-sub">
+            Consultoria, desenvolvimento de software sob medida e treinamentos especializados 
+            para empresas que querem sair na frente com inteligência artificial e sistemas modernos.
+          </p>
+          <div class="hero-actions">
+            <a href="#projetos" class="btn btn-solid">Ver Projetos</a>
+            <a href="#servicos" class="btn btn-ghost">Nossos Serviços</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ SOBRE ═══════════════════ -->
+    <section id="sobre" class="section section-alt" aria-label="Sobre a InNovaIdeia">
+      <div class="container">
+        <div class="about-grid">
+          <div class="about-text reveal">
+            <span class="section-label">// quem somos</span>
+            <h2 class="section-title">Tecnologia com propósito,<br>na medida certa</h2>
+            <p>
+              A <strong>InNovaIdeia</strong> é uma consultoria tecnológica fundada por 
+              <strong>Dione Castro Alves</strong> em Franca, SP. Desde 2009 atuamos 
+              transformando desafios reais de negócios em soluções digitais que funcionam.
+            </p>
+            <p>
+              Combinamos expertise técnica em <strong>desenvolvimento de sistemas</strong> 
+              com uma abordagem consultiva e estratégica. Nossos projetos vão de CRUDs robustos 
+              com Flask e SQLite até plataformas complexas com <strong>inteligência artificial integrada</strong>.
+            </p>
+            <div class="stats-row">
+              <div class="stat-item">
+                <div class="stat-number" data-target="15">0</div>
+                <div class="stat-label">Anos de atuação</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="30">0</div>
+                <div class="stat-label">Projetos entregues</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-number" data-target="3">0</div>
+                <div class="stat-label">Verticais de serviço</div>
+              </div>
+            </div>
+          </div>
+          <div class="reveal">
+            <span class="section-label">// stack técnica</span>
+            <div class="tech-stack" style="margin-top: 12px;">
+              <span class="tech-badge"><span class="dot"></span>Python</span>
+              <span class="tech-badge"><span class="dot"></span>JavaScript</span>
+              <span class="tech-badge"><span class="dot"></span>React</span>
+              <span class="tech-badge"><span class="dot"></span>Flask</span>
+              <span class="tech-badge"><span class="dot"></span>SQLite</span>
+              <span class="tech-badge"><span class="dot"></span>PostgreSQL</span>
+              <span class="tech-badge"><span class="dot"></span>HTML/CSS</span>
+              <span class="tech-badge"><span class="dot"></span>Bootstrap</span>
+              <span class="tech-badge"><span class="dot"></span>Supabase</span>
+              <span class="tech-badge"><span class="dot"></span>Redis</span>
+              <span class="tech-badge"><span class="dot"></span>Docker</span>
+              <span class="tech-badge"><span class="dot"></span>Groq / IA</span>
+              <span class="tech-badge"><span class="dot"></span>OpenCV</span>
+              <span class="tech-badge"><span class="dot"></span>Railway</span>
+              <span class="tech-badge"><span class="dot"></span>PWA</span>
+              <span class="tech-badge"><span class="dot"></span>REST APIs</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ SERVIÇOS ═══════════════════ -->
+    <section id="servicos" class="section" aria-label="Serviços oferecidos">
+      <div class="container">
+        <div class="services-header reveal">
+          <span class="section-label">// o que fazemos</span>
+          <h2 class="section-title">Soluções para cada etapa<br>da sua jornada tecnológica</h2>
+          <p class="section-sub">Do diagnóstico ao deploy, passando pela capacitação da sua equipe.</p>
+        </div>
+        <div class="services-grid">
+          <div class="service-card reveal">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2V9M9 21H5a2 2 0 0 1-2-2V9m0 0h18"/></svg>
+            </div>
+            <h3>Consultoria em Tecnologia</h3>
+            <p>Diagnóstico tecnológico, análise de processos e roadmap de modernização. Assessoria estratégica para PMEs que querem escalar com inteligência e sem desperdício.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+            </div>
+            <h3>Desenvolvimento de Software</h3>
+            <p>Sistemas web sob medida com Python, Flask, React e integração com IA. De MVPs ágeis a plataformas completas com banco de dados, APIs e deploy em produção.</p>
+          </div>
+          <div class="service-card reveal">
+            <div class="service-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            </div>
+            <h3>Treinamentos Especializados</h3>
+            <p>Capacitação em Python, JavaScript, lógica de programação, IA generativa e automações. Para profissionais e equipes que querem dominar as ferramentas do futuro.</p>
+          </div>
+        </div>
+        <div class="services-cta reveal">
+          Precisa de algo específico? <a href="#contato">Vamos conversar →</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ PROJETOS ═══════════════════ -->
+    <section id="projetos" class="section section-alt" aria-label="Projetos em destaque">
+      <div class="container">
+        <div class="projects-header">
+          <div class="reveal">
+            <span class="section-label">// projetos</span>
+            <h2 class="section-title">Soluções construídas,<br>resultados entregues</h2>
+          </div>
+          <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="btn btn-outline reveal" aria-label="Ver todos os projetos no GitHub">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            Ver no GitHub
+          </a>
+        </div>
+        <div class="projects-grid">
+
+          <!-- InDataLab -->
+          <article class="project-card reveal" aria-label="Projeto InDataLab">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);">
+                <span class="project-thumb-icon" aria-hidden="true">🔬</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>InDataLab</h3>
+              <p>Plataforma web de notebooks para ciência de dados. Multi-usuário com autenticação, execução de células Python e interface responsiva mobile-first.</p>
+              <div class="project-tags" aria-label="Tecnologias utilizadas">
+                <span class="tag">Python</span><span class="tag">Flask</span><span class="tag">Data Science</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link" aria-label="Ver InDataLab no GitHub">
+                Ver projeto →
+              </a>
+            </div>
+          </article>
+
+          <!-- FoodVision AI -->
+          <article class="project-card reveal" aria-label="Projeto FoodVision AI">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #134e5e, #71b280);">
+                <span class="project-thumb-icon" aria-hidden="true">🍊</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>FoodVision AI</h3>
+              <p>Analisador de maturação de frutas com visão computacional e IA (Groq + LLaMA). OpenCV, análise de cor e identificação de espécies por visão.</p>
+              <div class="project-tags">
+                <span class="tag">Python</span><span class="tag">OpenCV</span><span class="tag">Groq IA</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link">Ver projeto →</a>
+            </div>
+          </article>
+
+          <!-- FormalizeAI -->
+          <article class="project-card reveal" aria-label="Projeto FormalizeAI">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #1a1a2e, #16213e, #7c3aed);">
+                <span class="project-thumb-icon" aria-hidden="true">🤖</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>FormalizeAI</h3>
+              <p>Pipeline multi-agente de formalização de texto com scoring de 18 critérios. Supabase + Redis, deploy Railway, UX mobile-first com sidebar adaptativa.</p>
+              <div class="project-tags">
+                <span class="tag">Flask</span><span class="tag">Multi-Agent</span><span class="tag">Supabase</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link">Ver projeto →</a>
+            </div>
+          </article>
+
+          <!-- GST Market -->
+          <article class="project-card reveal" aria-label="Projeto GST Market">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #0f3460, #533483);">
+                <span class="project-thumb-icon" aria-hidden="true">🛒</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>GST Market — Supermercado Pro</h3>
+              <p>PWA completo para gestão de supermercado: PDV, relatórios, inteligência de preços, pedidos e Service Worker com suporte offline-first.</p>
+              <div class="project-tags">
+                <span class="tag">PWA</span><span class="tag">JavaScript</span><span class="tag">IndexedDB</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link">Ver projeto →</a>
+            </div>
+          </article>
+
+          <!-- SmartFlow CRM -->
+          <article class="project-card reveal" aria-label="Projeto InNova SmartFlow CRM">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #00416a, #e4e5e6);">
+                <span class="project-thumb-icon" aria-hidden="true">📊</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>InNova SmartFlow CRM</h3>
+              <p>CRM Flask com gestão de leads, pipeline comercial, segurança CSRF/XSS, autenticação robusta e CRUD completo com feedback em tempo real.</p>
+              <div class="project-tags">
+                <span class="tag">Flask</span><span class="tag">CRM</span><span class="tag">SQLite</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link">Ver projeto →</a>
+            </div>
+          </article>
+
+          <!-- Elvis Veículos -->
+          <article class="project-card reveal" aria-label="Projeto Elvis Veículos">
+            <div class="project-thumb">
+              <div class="project-thumb-bg" style="background: linear-gradient(135deg, #1c1c1c, #333333, #b8860b);">
+                <span class="project-thumb-icon" aria-hidden="true">🚗</span>
+              </div>
+            </div>
+            <div class="project-body">
+              <h3>Elvis Veículos</h3>
+              <p>Plataforma de concessionária com catálogo público e painel admin. Supabase + FIPE API com cache por TTL, upload de fotos e gestão de leads.</p>
+              <div class="project-tags">
+                <span class="tag">JavaScript</span><span class="tag">Supabase</span><span class="tag">FIPE API</span>
+              </div>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="project-link">Ver projeto →</a>
+            </div>
+          </article>
+
+        </div>
+        <div class="projects-footer reveal">
+          <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="btn btn-ghost" aria-label="Ver todos os projetos no GitHub">
+            Ver todos no GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ DIFERENCIAIS ═══════════════════ -->
+    <section class="section" aria-label="Diferenciais InNovaIdeia">
+      <div class="container">
+        <div class="diff-header reveal">
+          <span class="section-label">// por que innova</span>
+          <h2 class="section-title">O que nos torna diferentes</h2>
+        </div>
+        <div class="diff-grid">
+          <div class="diff-card reveal">
+            <span class="diff-icon" aria-hidden="true">✦</span>
+            <h4>Código limpo e comentado</h4>
+            <p>Boas práticas desde a primeira linha. Entregamos código que a sua equipe consegue manter e evoluir.</p>
+          </div>
+          <div class="diff-card reveal">
+            <span class="diff-icon" aria-hidden="true">🧠</span>
+            <h4>IA no core do projeto</h4>
+            <p>Não adicionamos IA como feature. Ela é parte da arquitetura — integrada onde gera valor de verdade.</p>
+          </div>
+          <div class="diff-card reveal">
+            <span class="diff-icon" aria-hidden="true">⚡</span>
+            <h4>Entrega ágil</h4>
+            <p>MVPs em semanas, não meses. Priorizamos resultado funcional rápido sem abrir mão da qualidade.</p>
+          </div>
+          <div class="diff-card reveal">
+            <span class="diff-icon" aria-hidden="true">🤝</span>
+            <h4>Suporte contínuo</h4>
+            <p>Não sumimos depois da entrega. Acompanhamos a evolução do projeto e da equipe no longo prazo.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════ CONTATO ═══════════════════ -->
+    <section id="contato" class="section section-alt" aria-label="Formulário de contato">
+      <div class="container">
+        <div class="contact-grid">
+          <div class="contact-info reveal">
+            <span class="section-label">// contato</span>
+            <h2 class="section-title">Vamos construir<br>algo juntos?</h2>
+            <p>Respondo em até 24h úteis. Me conta o seu desafio — seja um sistema, uma dúvida técnica ou um projeto de treinamento.</p>
+            <div class="contact-links">
+              <a href="mailto:innovaideia2023@gmail.com" class="contact-link-item" aria-label="Enviar e-mail para innovaideia2023@gmail.com">
+                <span class="link-icon">
+                  <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                </span>
+                innovaideia2023@gmail.com
+              </a>
+              <a href="https://linkedin.com/in/dione-castro-alves" target="_blank" rel="noopener noreferrer" class="contact-link-item" aria-label="Visitar LinkedIn de Dione Castro Alves">
+                <span class="link-icon">
+                  <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </span>
+                linkedin.com/in/dione-castro-alves
+              </a>
+              <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="contact-link-item" aria-label="Visitar GitHub Foxactive1">
+                <span class="link-icon">
+                  <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                </span>
+                github.com/Foxactive1
+              </a>
+            </div>
+          </div>
+
+          <!-- Formulário -->
+          <div class="contact-form reveal" role="region" aria-label="Formulário de contato">
+            <div id="formBody">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="nome">Nome completo *</label>
+                  <input type="text" id="nome" name="nome" placeholder="Seu nome" autocomplete="name" required aria-required="true" />
+                  <span class="form-error-msg">Por favor, informe seu nome.</span>
+                </div>
+                <div class="form-group">
+                  <label for="email">E-mail *</label>
+                  <input type="email" id="email" name="email" placeholder="seu@email.com" autocomplete="email" required aria-required="true" />
+                  <span class="form-error-msg">Informe um e-mail válido.</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="telefone">WhatsApp (opcional)</label>
+                <input type="tel" id="telefone" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel" />
+              </div>
+
+              <div>
+                <span class="interest-label">Tipo de interesse</span>
+                <div class="interest-options" role="group" aria-label="Selecione o tipo de interesse">
+                  <button type="button" class="interest-btn active" data-value="Consultoria" aria-pressed="true">Consultoria</button>
+                  <button type="button" class="interest-btn" data-value="Desenvolvimento" aria-pressed="false">Desenvolvimento</button>
+                  <button type="button" class="interest-btn" data-value="Treinamento" aria-pressed="false">Treinamento</button>
+                  <button type="button" class="interest-btn" data-value="Outro" aria-pressed="false">Outro</button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="mensagem">Mensagem *</label>
+                <textarea id="mensagem" name="mensagem" placeholder="Descreva seu projeto ou dúvida..." required aria-required="true" minlength="20"></textarea>
+                <div class="char-counter"><span id="charCount">0</span>/500</div>
+                <span class="form-error-msg">Escreva pelo menos 20 caracteres.</span>
+              </div>
+
+              <div class="checkbox-group">
+                <input type="checkbox" id="newsletter" name="newsletter" />
+                <label for="newsletter">Aceito receber conteúdos sobre tecnologia e inovação da InNovaIdeia.</label>
+              </div>
+
+              <button type="button" id="submitBtn" class="btn btn-solid btn-submit" aria-label="Enviar mensagem">
+                <span class="btn-text">Enviar Mensagem</span>
+                <span class="spinner" aria-hidden="true"></span>
+              </button>
+            </div>
+
+            <div class="form-success" id="formSuccess" role="status" aria-live="polite">
+              <span class="success-icon" aria-hidden="true">✅</span>
+              <h3>Mensagem enviada!</h3>
+              <p>Obrigado pelo contato. Responderei em até 24h úteis.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════ FOOTER ═══════════════════ -->
+  <footer aria-label="Rodapé">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="footer-brand">
+          <a href="#hero" class="nav-logo" aria-label="InNovaIdeia — voltar ao topo">InNova<span>Ideia</span></a>
+          <p class="footer-tagline">Inovação que transforma.<br>Tecnologia que conecta.</p>
+          <div class="footer-social">
+            <a href="https://linkedin.com/in/dione-castro-alves" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="LinkedIn de Dione Castro Alves">
+              <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+            </a>
+            <a href="https://github.com/Foxactive1" target="_blank" rel="noopener noreferrer" class="social-btn" aria-label="GitHub Foxactive1">
+              <svg viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+            </a>
+            <a href="mailto:innovaideia2023@gmail.com" class="social-btn" aria-label="Enviar e-mail">
+              <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <h5>Navegação</h5>
+          <ul class="footer-links" role="list">
+            <li><a href="#sobre">Sobre</a></li>
+            <li><a href="#servicos">Serviços</a></li>
+            <li><a href="#projetos">Projetos</a></li>
+            <li><a href="#contato">Contato</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h5>Serviços</h5>
+          <ul class="footer-links" role="list">
+            <li><a href="#servicos">Consultoria em Tecnologia</a></li>
+            <li><a href="#servicos">Desenvolvimento de Software</a></li>
+            <li><a href="#servicos">Treinamentos Especializados</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 InNovaIdeia Assessoria em Tecnologia. Todos os direitos reservados.</p>
+        <span class="made-with">Desenvolvido com 💡 em Franca, SP — Brasil</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ══════════════════════════════════════════
+    // NAVBAR — scroll + mobile toggle
+    // ══════════════════════════════════════════
+    const navbar = document.getElementById('navbar');
+    const navToggle = document.getElementById('navToggle');
+    const navMobile = document.getElementById('navMobile');
+
+    window.addEventListener('scroll', () => {
+      navbar.classList.toggle('scrolled', window.scrollY > 40);
+    }, { passive: true });
+
+    navToggle.addEventListener('click', () => {
+      const isOpen = navToggle.classList.toggle('open');
+      navMobile.classList.toggle('open', isOpen);
+      navToggle.setAttribute('aria-expanded', isOpen);
+    });
+
+    // Fechar menu mobile ao clicar em link
+    navMobile.querySelectorAll('a').forEach(link => {
+      link.addEventListener('click', () => {
+        navToggle.classList.remove('open');
+        navMobile.classList.remove('open');
+        navToggle.setAttribute('aria-expanded', false);
+      });
+    });
+
+    // ══════════════════════════════════════════
+    // CANVAS — partículas sutis no hero
+    // ══════════════════════════════════════════
+    (function() {
+      const canvas = document.getElementById('hero-canvas');
+      const ctx = canvas.getContext('2d');
+      let W, H, particles = [];
+      const COUNT = 60;
+
+      function resize() {
+        W = canvas.width  = canvas.offsetWidth;
+        H = canvas.height = canvas.offsetHeight;
+      }
+
+      function Particle() {
+        this.x = Math.random() * W;
+        this.y = Math.random() * H;
+        this.r = Math.random() * 1.5 + 0.3;
+        this.vx = (Math.random() - 0.5) * 0.3;
+        this.vy = (Math.random() - 0.5) * 0.3;
+        this.alpha = Math.random() * 0.5 + 0.1;
+      }
+
+      Particle.prototype.update = function() {
+        this.x += this.vx;
+        this.y += this.vy;
+        if (this.x < 0) this.x = W;
+        if (this.x > W) this.x = 0;
+        if (this.y < 0) this.y = H;
+        if (this.y > H) this.y = 0;
+      };
+
+      function init() {
+        particles = Array.from({ length: COUNT }, () => new Particle());
+      }
+
+      function draw() {
+        ctx.clearRect(0, 0, W, H);
+        particles.forEach(p => {
+          p.update();
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(0,180,216,${p.alpha})`;
+          ctx.fill();
+        });
+
+        // Linhas entre partículas próximas
+        for (let i = 0; i < COUNT; i++) {
+          for (let j = i + 1; j < COUNT; j++) {
+            const dx = particles[i].x - particles[j].x;
+            const dy = particles[i].y - particles[j].y;
+            const dist = Math.sqrt(dx*dx + dy*dy);
+            if (dist < 100) {
+              ctx.beginPath();
+              ctx.moveTo(particles[i].x, particles[i].y);
+              ctx.lineTo(particles[j].x, particles[j].y);
+              ctx.strokeStyle = `rgba(0,180,216,${0.08 * (1 - dist/100)})`;
+              ctx.lineWidth = 0.5;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(draw);
+      }
+
+      window.addEventListener('resize', () => { resize(); init(); }, { passive: true });
+      resize();
+      init();
+      draw();
+    })();
+
+    // ══════════════════════════════════════════
+    // SCROLL REVEAL — IntersectionObserver
+    // ══════════════════════════════════════════
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach((el, i) => {
+      el.style.transitionDelay = `${(i % 4) * 0.07}s`;
+      revealObserver.observe(el);
+    });
+
+    // ══════════════════════════════════════════
+    // CONTAGEM ANIMADA DE ESTATÍSTICAS
+    // ══════════════════════════════════════════
+    const statObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const el = entry.target;
+          const target = parseInt(el.dataset.target, 10);
+          const suffix = el.dataset.suffix || '+';
+          let current = 0;
+          const increment = Math.ceil(target / 40);
+          const timer = setInterval(() => {
+            current = Math.min(current + increment, target);
+            el.textContent = current + suffix;
+            if (current >= target) clearInterval(timer);
+          }, 40);
+          statObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+
+    document.querySelectorAll('.stat-number').forEach(el => statObserver.observe(el));
+
+    // ══════════════════════════════════════════
+    // FORMULÁRIO — interesse, máscara, validação
+    // ══════════════════════════════════════════
+
+    // Interest toggle
+    let selectedInterest = 'Consultoria';
+    document.querySelectorAll('.interest-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.interest-btn').forEach(b => {
+          b.classList.remove('active');
+          b.setAttribute('aria-pressed', 'false');
+        });
+        btn.classList.add('active');
+        btn.setAttribute('aria-pressed', 'true');
+        selectedInterest = btn.dataset.value;
+      });
+    });
+
+    // Máscara de telefone
+    const telInput = document.getElementById('telefone');
+    telInput.addEventListener('input', () => {
+      let v = telInput.value.replace(/\D/g, '').slice(0, 11);
+      if (v.length > 6) v = `(${v.slice(0,2)}) ${v.slice(2,7)}-${v.slice(7)}`;
+      else if (v.length > 2) v = `(${v.slice(0,2)}) ${v.slice(2)}`;
+      else if (v.length > 0) v = `(${v}`;
+      telInput.value = v;
+    });
+
+    // Contador de caracteres na mensagem
+    const msgInput = document.getElementById('mensagem');
+    const charCount = document.getElementById('charCount');
+    msgInput.addEventListener('input', () => {
+      const len = Math.min(msgInput.value.length, 500);
+      charCount.textContent = len;
+      if (len > 500) msgInput.value = msgInput.value.slice(0, 500);
+    });
+
+    // Validação e submit
+    function validateField(input) {
+      let valid = true;
+      if (input.id === 'nome' && input.value.trim().length < 2) valid = false;
+      if (input.id === 'email' && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value)) valid = false;
+      if (input.id === 'mensagem' && input.value.trim().length < 20) valid = false;
+      input.classList.toggle('error', !valid);
+      return valid;
+    }
+
+    ['nome','email','mensagem'].forEach(id => {
+      const el = document.getElementById(id);
+      el.addEventListener('blur', () => validateField(el));
+      el.addEventListener('input', () => { if (el.classList.contains('error')) validateField(el); });
+    });
+
+    document.getElementById('submitBtn').addEventListener('click', () => {
+      const nome     = document.getElementById('nome');
+      const email    = document.getElementById('email');
+      const mensagem = document.getElementById('mensagem');
+
+      const valid = [
+        validateField(nome),
+        validateField(email),
+        validateField(mensagem)
+      ].every(Boolean);
+
+      if (!valid) {
+        const firstError = document.querySelector('.error');
+        if (firstError) firstError.focus();
+        return;
+      }
+
+      const btn = document.getElementById('submitBtn');
+      btn.classList.add('loading');
+      btn.disabled = true;
+
+      setTimeout(() => {
+        document.getElementById('formBody').style.display = 'none';
+        document.getElementById('formSuccess').classList.add('show');
+      }, 1800);
+    });
+
+    // ══════════════════════════════════════════
+    // SMOOTH SCROLL — links âncora
+    // ══════════════════════════════════════════
+    document.querySelectorAll('a[href^="#"]').forEach(a => {
+      a.addEventListener('click', e => {
+        const target = document.querySelector(a.getAttribute('href'));
+        if (target) {
+          e.preventDefault();
+          const offset = 72;
+          window.scrollTo({ top: target.offsetTop - offset, behavior: 'smooth' });
+        }
+      });
+    });
+  </script>
+</body>
+</html>
