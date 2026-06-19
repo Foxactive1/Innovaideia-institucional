@@ -1,0 +1,22 @@
+# fly.toml - Configuração para a API da InNovaIdeia
+
+app = "innovaideia-api"                # Nome do app no Fly.io
+primary_region = "gru"                 # Região: gru = São Paulo (menor latência para o Brasil)
+
+[build]
+  dockerfile = "Dockerfile"            # Usa o Dockerfile que você criou
+
+[env]
+  DB_PATH = "/data/contatos.db"        # Onde o SQLite vai salvar os dados (dentro do volume)
+
+[[mounts]]
+  source = "api_data"                  # Nome do volume
+  destination = "/data"                # Pasta dentro do container onde o volume será montado
+
+[http_service]
+  internal_port = 8080                 # Porta que o Gunicorn usa dentro do container
+  force_https = true                   # Força HTTPS para todas as requisições
+  auto_stop_machines = true            # Desliga a máquina quando inativa (economiza recursos)
+  auto_start_machines = true           # Liga automaticamente quando recebe uma requisição
+  min_machines_running = 0             # Pode ficar com 0 máquinas rodando quando sem uso (plano gratuito)
+  processes = ["app"]                  # Processo principal
