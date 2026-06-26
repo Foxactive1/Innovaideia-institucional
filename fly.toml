@@ -1,4 +1,4 @@
-# fly.toml - Configuração para a API da InNovaIdeia
+## fly.toml - Configuração para a API da InNovaIdeia
 
 app = "innovaideia-api"                # Nome do app no Fly.io
 primary_region = "gru"                 # Região: gru = São Paulo (menor latência para o Brasil)
