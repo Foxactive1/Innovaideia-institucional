@@ -1,0 +1,23 @@
+# Imagem oficial do Python
+FROM python:3.12-slim
+
+# Evita criação de arquivos .pyc e garante logs imediatos
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
+# Diretório da aplicação
+WORKDIR /app
+
+# Instala dependências
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
+
+# Copia o restante do projeto
+COPY . .
+
+# Expõe a porta utilizada pelo Railway
+EXPOSE 8080
+
+# Inicia a aplicação
+CMD ["gunicorn", "-w", "2", "-k", "gthread", "--threads", "4", "-b", "0.0.0.0:8080", "app:app"]
