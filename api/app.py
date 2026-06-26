@@ -20,7 +20,7 @@ EMAIL_TO = os.getenv("EMAIL_TO", "innovaideia2023@gmail.com")
 DB_PATH = os.getenv("DB_PATH", "contatos.db")
 DEBUG = os.getenv("FLASK_DEBUG", "0") == "1"
 
-# ================= LOGGING =================
+# ================== LOGGING =================
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(levelname)s - %(message)s'
