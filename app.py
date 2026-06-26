@@ -11,7 +11,7 @@ from html import escape
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 
-# ================= CONFIGURAÇÕES (via variáveis de ambiente) =================
+# ================== CONFIGURAÇÕES (via variáveis de ambiente) =================
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
 SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
 SMTP_USER = os.getenv("SMTP_USER")          # obrigatório
