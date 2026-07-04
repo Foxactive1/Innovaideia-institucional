@@ -1,0 +1,1615 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="InNovaIdeia Assessoria em Tecnologia — Consultoria, desenvolvimento full stack e inteligência artificial aplicada. De Franca-SP para o mundo, desde 2009.">
+    <meta name="keywords" content="desenvolvimento web, sistemas, consultoria, inteligência artificial, automação, Python, Flask, React, InNovaIdeia, Franca, tecnologia">
+    <meta name="author" content="InNovaIdeia Assessoria em Tecnologia">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://innovaideia.com.br/">
+    <meta property="og:title" content="InNovaIdeia — Assessoria em Tecnologia">
+    <meta property="og:description" content="Software sob medida com precisão de engenharia. Consultoria, desenvolvimento e IA aplicada.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://innovaideia.com.br/">
+    <meta property="og:image" content="https://innovaideia.com.br/static/img/og-image.jpg">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="InNovaIdeia — Assessoria em Tecnologia">
+    <meta name="twitter:description" content="Software sob medida com precisão de engenharia. Consultoria, desenvolvimento e IA aplicada.">
+    <title>InNovaIdeia — Assessoria em Tecnologia | Desenvolvimento & IA</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%230E1F3C'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' font-family='monospace' font-size='18' fill='%23E8A33D' font-weight='bold'>IN</text></svg>">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --navy: #0E1F3C;
+            --navy-deep: #081527;
+            --navy-card: #132A4E;
+            --navy-light: #1a3a5c;
+            --line: rgba(143, 163, 196, 0.22);
+            --line-strong: rgba(143, 163, 196, 0.4);
+            --paper: #F5F1E8;
+            --steel: #8FA3C4;
+            --steel-light: #b0c4de;
+            --amber: #E8A33D;
+            --amber-deep: #C97F1E;
+            --amber-glow: rgba(232, 163, 61, 0.25);
+            --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Code', 'Source Code Pro', monospace;
+            --sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+            --radius: 2px;
+            --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            background-color: var(--navy-deep);
+            background-image:
+                linear-gradient(var(--line) 1px, transparent 1px),
+                linear-gradient(90deg, var(--line) 1px, transparent 1px);
+            background-size: 42px 42px;
+            background-attachment: fixed;
+            font-family: var(--sans);
+            color: var(--paper);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── Loader ─────────────────────────── */
+        #inv-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--navy-deep);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        #inv-loader.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        .inv-loader-ring {
+            width: 48px;
+            height: 48px;
+            border: 2px solid var(--line-strong);
+            border-top-color: var(--amber);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+        }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── Navbar ────────────────────────── */
+        .inv-navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 16px 0;
+            transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
+            font-family: var(--mono);
+            font-size: 13px;
+            letter-spacing: 0.4px;
+        }
+        .inv-navbar.scrolled {
+            background: rgba(8, 21, 39, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            padding: 10px 0;
+            border-bottom: 1px solid var(--line);
+        }
+        .inv-navbar .container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .inv-nav-logo {
+            font-family: var(--mono);
+            font-weight: 700;
+            font-size: 20px;
+            color: var(--amber);
+            text-decoration: none;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .inv-nav-logo .inv-logo-mark {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--amber);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+        .inv-nav-links {
+            display: flex;
+            align-items: center;
+            gap: 26px;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        .inv-nav-links a {
+            color: var(--steel);
+            text-decoration: none;
+            transition: color var(--transition);
+            position: relative;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 2px;
+        }
+        .inv-nav-links a:hover,
+        .inv-nav-links a.active {
+            color: var(--amber);
+        }
+        .inv-nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--amber);
+            transition: width var(--transition);
+        }
+        .inv-nav-links a:hover::after,
+        .inv-nav-links a.active::after {
+            width: 100%;
+        }
+        .inv-nav-cta {
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: 12px;
+            letter-spacing: 1px;
+            color: var(--navy-deep) !important;
+            background: var(--amber);
+            padding: 10px 18px !important;
+            border-radius: var(--radius);
+            text-decoration: none;
+            transition: background var(--transition), color var(--transition);
+        }
+        .inv-nav-cta:hover {
+            background: var(--amber-deep);
+            color: var(--paper) !important;
+        }
+        .inv-nav-cta::after {
+            display: none !important;
+        }
+        .inv-hamburger {
+            display: none;
+            background: none;
+            border: 1px solid var(--line-strong);
+            color: var(--paper);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px 12px;
+            border-radius: var(--radius);
+        }
+        @media (max-width: 992px) {
+            .inv-nav-links {
+                position: fixed;
+                top: 0;
+                right: -320px;
+                width: 280px;
+                height: 100vh;
+                background: var(--navy-deep);
+                flex-direction: column;
+                padding: 80px 30px 30px;
+                gap: 20px;
+                transition: right 0.35s ease;
+                border-left: 1px solid var(--line);
+                z-index: 1001;
+            }
+            .inv-nav-links.open {
+                right: 0;
+            }
+            .inv-hamburger {
+                display: block;
+                z-index: 1002;
+            }
+            .inv-nav-overlay {
+                display: none;
+                position: fixed;
+                inset: 0;
+                background: rgba(0, 0, 0, 0.55);
+                z-index: 999;
+            }
+            .inv-nav-overlay.show {
+                display: block;
+            }
+        }
+
+        /* ── Hero ──────────────────────────── */
+        .inv-hero {
+            position: relative;
+            padding: 140px 0 100px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+        .inv-hero .container {
+            position: relative;
+            z-index: 2;
+        }
+        .inv-hero-corners {
+            position: absolute;
+            inset: 30px;
+            pointer-events: none;
+            z-index: 1;
+        }
+        .inv-hero-corners span {
+            position: absolute;
+            width: 28px;
+            height: 28px;
+            border: 1px solid var(--line-strong);
+        }
+        .inv-hero-corners span:nth-child(1) {
+            top: 0;
+            left: 0;
+            border-right: none;
+            border-bottom: none;
+        }
+        .inv-hero-corners span:nth-child(2) {
+            top: 0;
+            right: 0;
+            border-left: none;
+            border-bottom: none;
+        }
+        .inv-hero-corners span:nth-child(3) {
+            bottom: 0;
+            left: 0;
+            border-right: none;
+            border-top: none;
+        }
+        .inv-hero-corners span:nth-child(4) {
+            bottom: 0;
+            right: 0;
+            border-left: none;
+            border-top: none;
+        }
+        .inv-hero-eyebrow {
+            font-family: var(--mono);
+            font-size: 12px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 18px;
+        }
+        .inv-hero-eyebrow::before {
+            content: '// ';
+            color: var(--steel);
+        }
+        .inv-hero h1 {
+            font-family: var(--mono);
+            font-size: clamp(38px, 6vw, 66px);
+            font-weight: 700;
+            line-height: 1.08;
+            margin: 0 0 20px 0;
+            letter-spacing: -1px;
+            color: var(--paper);
+        }
+        .inv-hero-lede {
+            font-size: 18px;
+            line-height: 1.8;
+            color: var(--steel);
+            max-width: 580px;
+            margin-bottom: 36px;
+        }
+        .inv-hero-btns {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .inv-btn {
+            display: inline-block;
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+            padding: 14px 26px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            cursor: pointer;
+            transition: all var(--transition);
+            border: none;
+        }
+        .inv-btn-primary {
+            background: var(--amber);
+            color: var(--navy-deep);
+        }
+        .inv-btn-primary:hover {
+            background: var(--amber-deep);
+            color: var(--paper);
+        }
+        .inv-btn-outline {
+            background: transparent;
+            color: var(--paper);
+            border: 1px solid var(--line-strong);
+        }
+        .inv-btn-outline:hover {
+            border-color: var(--amber);
+            color: var(--amber);
+        }
+        .inv-hero-blueprint {
+            position: absolute;
+            right: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45%;
+            max-width: 550px;
+            opacity: 0.35;
+            pointer-events: none;
+            z-index: 0;
+        }
+        @media (max-width: 992px) {
+            .inv-hero-blueprint {
+                display: none;
+            }
+            .inv-hero {
+                text-align: center;
+                padding: 120px 0 80px;
+            }
+            .inv-hero-lede {
+                margin-left: auto;
+                margin-right: auto;
+            }
+            .inv-hero-btns {
+                justify-content: center;
+            }
+        }
+
+        /* ── Section shared ────────────────── */
+        .inv-section {
+            padding: 90px 0;
+            position: relative;
+            border-top: 1px solid var(--line);
+        }
+        .inv-section h2 {
+            font-family: var(--mono);
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--paper);
+            margin-bottom: 12px;
+        }
+        .inv-section .inv-sub {
+            color: var(--steel);
+            font-size: 16px;
+            max-width: 560px;
+            margin-bottom: 50px;
+            line-height: 1.75;
+        }
+        .inv-eyebrow-sm {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 10px;
+            display: block;
+        }
+        .inv-eyebrow-sm::before {
+            content: '// ';
+            color: var(--steel);
+        }
+
+        /* ── Indicadores ───────────────────── */
+        .inv-indicators-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 24px;
+            text-align: center;
+        }
+        .inv-indicator {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            padding: 36px 20px;
+            border-radius: var(--radius);
+            transition: border-color var(--transition);
+        }
+        .inv-indicator:hover {
+            border-color: var(--amber);
+        }
+        .inv-indicator .inv-num {
+            font-family: var(--mono);
+            font-size: 44px;
+            font-weight: 700;
+            color: var(--amber);
+            display: block;
+            line-height: 1;
+            margin-bottom: 8px;
+        }
+        .inv-indicator .inv-label {
+            font-family: var(--mono);
+            font-size: 12px;
+            letter-spacing: 1.5px;
+            color: var(--steel);
+            text-transform: uppercase;
+        }
+        @media (max-width: 768px) {
+            .inv-indicators-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        @media (max-width: 480px) {
+            .inv-indicators-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Cards de Serviços ────────────── */
+        .inv-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .inv-card-serv {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            padding: 34px 24px 28px;
+            position: relative;
+            clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
+            transition: border-color var(--transition), transform var(--transition);
+        }
+        .inv-card-serv:hover {
+            border-color: var(--amber);
+            transform: translateY(-4px);
+        }
+        .inv-card-serv::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, transparent 50%, var(--navy-deep) 50%);
+        }
+        .inv-card-serv .inv-card-icon {
+            font-size: 28px;
+            color: var(--amber);
+            margin-bottom: 16px;
+            display: block;
+        }
+        .inv-card-serv h3 {
+            font-size: 19px;
+            color: var(--paper);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .inv-card-serv p {
+            color: var(--steel);
+            font-size: 14px;
+            line-height: 1.7;
+            margin-bottom: 16px;
+        }
+        .inv-card-serv .inv-card-link {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--amber);
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        .inv-card-serv .inv-card-link:hover {
+            text-decoration: underline;
+        }
+        @media (max-width: 992px) {
+            .inv-cards-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 600px) {
+            .inv-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Tecnologias Grid ─────────────── */
+        .inv-tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 16px;
+        }
+        .inv-tech-item {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            padding: 20px 14px;
+            text-align: center;
+            border-radius: var(--radius);
+            transition: all var(--transition);
+            cursor: default;
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--steel);
+            letter-spacing: 0.5px;
+        }
+        .inv-tech-item i {
+            display: block;
+            font-size: 28px;
+            color: var(--amber);
+            margin-bottom: 10px;
+        }
+        .inv-tech-item:hover {
+            border-color: var(--amber);
+            color: var(--paper);
+            background: var(--navy-light);
+        }
+
+        /* ── Timeline ─────────────────────── */
+        .inv-timeline {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            padding: 30px 0;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .inv-timeline::before {
+            content: '';
+            position: absolute;
+            top: 44px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--line-strong);
+            z-index: 0;
+        }
+        .inv-timeline-step {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            flex: 1;
+            min-width: 100px;
+        }
+        .inv-timeline-dot {
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--amber);
+            border-radius: 50%;
+            background: var(--navy-deep);
+            margin: 0 auto 14px;
+            position: relative;
+            z-index: 1;
+            transition: background var(--transition);
+        }
+        .inv-timeline-step:hover .inv-timeline-dot {
+            background: var(--amber);
+        }
+        .inv-timeline-step h4 {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--paper);
+            margin: 0 0 4px;
+            letter-spacing: 0.5px;
+        }
+        .inv-timeline-step p {
+            font-size: 11px;
+            color: var(--steel);
+            margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* ── Depoimentos ──────────────────── */
+        .inv-testimonial-card {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            padding: 30px;
+            border-radius: var(--radius);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .inv-testimonial-card .inv-stars {
+            color: var(--amber);
+            margin-bottom: 12px;
+            font-size: 16px;
+        }
+        .inv-testimonial-card blockquote {
+            color: var(--steel-light);
+            font-style: italic;
+            font-size: 15px;
+            line-height: 1.7;
+            margin: 0 0 16px;
+            border: none;
+            padding: 0;
+        }
+        .inv-testimonial-card .inv-author {
+            font-family: var(--mono);
+            font-size: 13px;
+            color: var(--amber);
+        }
+
+        /* ── FAQ Accordion ────────────────── */
+        .inv-accordion .accordion-item {
+            background: transparent;
+            border: 1px solid var(--line);
+            margin-bottom: 10px;
+            border-radius: var(--radius) !important;
+            overflow: hidden;
+        }
+        .inv-accordion .accordion-button {
+            background: var(--navy-card);
+            color: var(--paper);
+            font-family: var(--mono);
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            box-shadow: none;
+            padding: 16px 20px;
+        }
+        .inv-accordion .accordion-button:not(.collapsed) {
+            background: var(--navy-light);
+            color: var(--amber);
+            box-shadow: none;
+        }
+        .inv-accordion .accordion-button::after {
+            filter: invert(70%) sepia(50%) saturate(500%) hue-rotate(340deg);
+        }
+        .inv-accordion .accordion-body {
+            background: var(--navy-deep);
+            color: var(--steel);
+            font-size: 14px;
+            line-height: 1.8;
+            padding: 16px 20px;
+        }
+
+        /* ── CTA ──────────────────────────── */
+        .inv-cta-section {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            text-align: center;
+            padding: 60px 30px;
+            border-radius: var(--radius);
+        }
+        .inv-cta-section h2 {
+            font-family: var(--mono);
+            font-size: 30px;
+            margin-bottom: 16px;
+        }
+        .inv-cta-section p {
+            color: var(--steel);
+            max-width: 500px;
+            margin: 0 auto 28px;
+        }
+
+        /* ── Formulário ───────────────────── */
+        .inv-form {
+            background: var(--navy-card);
+            border: 1px solid var(--line);
+            padding: 40px;
+            border-radius: var(--radius);
+        }
+        .inv-form .form-label {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: var(--amber);
+            margin-bottom: 6px;
+        }
+        .inv-form .form-control {
+            background: var(--navy-deep);
+            border: 1px solid var(--line-strong);
+            color: var(--paper);
+            font-family: var(--sans);
+            border-radius: var(--radius);
+            padding: 12px 14px;
+            transition: border-color var(--transition);
+        }
+        .inv-form .form-control:focus {
+            border-color: var(--amber);
+            box-shadow: 0 0 0 3px var(--amber-glow);
+            background: var(--navy-deep);
+            color: var(--paper);
+        }
+        .inv-form textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+        .inv-form .inv-btn-submit {
+            background: var(--amber);
+            color: var(--navy-deep);
+            border: none;
+            font-family: var(--mono);
+            font-weight: 600;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            padding: 14px 30px;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all var(--transition);
+            width: 100%;
+        }
+        .inv-form .inv-btn-submit:hover {
+            background: var(--amber-deep);
+            color: var(--paper);
+        }
+        .inv-form-feedback {
+            display: none;
+            margin-top: 16px;
+            padding: 12px;
+            border-radius: var(--radius);
+            font-family: var(--mono);
+            font-size: 13px;
+        }
+        .inv-form-feedback.success {
+            display: block;
+            background: rgba(40, 167, 69, 0.2);
+            border: 1px solid #28a745;
+            color: #8fd19e;
+        }
+        .inv-form-feedback.error {
+            display: block;
+            background: rgba(220, 53, 69, 0.2);
+            border: 1px solid #dc3545;
+            color: #f5a3a3;
+        }
+
+        /* ── Footer ───────────────────────── */
+        .inv-footer {
+            background: var(--navy-deep);
+            border-top: 1px solid var(--line);
+            padding: 50px 0 30px;
+            font-size: 13px;
+            color: var(--steel);
+        }
+        .inv-footer .inv-footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        .inv-footer h5 {
+            font-family: var(--mono);
+            color: var(--amber);
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+        }
+        .inv-footer a {
+            color: var(--steel);
+            text-decoration: none;
+            transition: color var(--transition);
+            display: block;
+            margin-bottom: 8px;
+        }
+        .inv-footer a:hover {
+            color: var(--amber);
+        }
+        .inv-footer .inv-social-icons {
+            display: flex;
+            gap: 14px;
+            font-size: 20px;
+        }
+        .inv-footer .inv-social-icons a {
+            color: var(--steel);
+        }
+        .inv-footer .inv-social-icons a:hover {
+            color: var(--amber);
+        }
+        .inv-footer-bottom {
+            border-top: 1px solid var(--line);
+            padding-top: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 0.5px;
+        }
+        @media (max-width: 768px) {
+            .inv-footer .inv-footer-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 480px) {
+            .inv-footer .inv-footer-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── WhatsApp Float ────────────────── */
+        .inv-whatsapp-float {
+            position: fixed;
+            bottom: 28px;
+            right: 28px;
+            z-index: 900;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: #25D366;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 28px;
+            box-shadow: 0 4px 18px rgba(0, 0, 0, 0.4);
+            transition: transform var(--transition);
+            text-decoration: none;
+        }
+        .inv-whatsapp-float:hover {
+            transform: scale(1.08);
+            color: #fff;
+        }
+
+        /* ── Back to Top ──────────────────── */
+        .inv-back-top {
+            position: fixed;
+            bottom: 28px;
+            left: 28px;
+            z-index: 900;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--navy-card);
+            border: 1px solid var(--line-strong);
+            color: var(--amber);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all var(--transition);
+            text-decoration: none;
+        }
+        .inv-back-top.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .inv-back-top:hover {
+            background: var(--amber);
+            color: var(--navy-deep);
+        }
+
+        /* ── Animações ────────────────────── */
+        .inv-animate-on-scroll {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .inv-animate-on-scroll.in-view {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ── Breadcrumb simples ───────────── */
+        .inv-breadcrumb {
+            font-family: var(--mono);
+            font-size: 11px;
+            letter-spacing: 1px;
+            color: var(--steel);
+            margin-bottom: 20px;
+        }
+        .inv-breadcrumb a {
+            color: var(--amber);
+            text-decoration: none;
+        }
+        .inv-breadcrumb span {
+            color: var(--steel);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- ═══════════ LOADER ═══════════ -->
+    <div id="inv-loader"><div class="inv-loader-ring"></div></div>
+
+    <!-- ═══════════ NAVBAR ═══════════ -->
+    <nav class="inv-navbar" id="invNavbar" aria-label="Navegação principal">
+        <div class="container">
+            <a href="#home" class="inv-nav-logo" aria-label="InNovaIdeia — Ir ao topo">
+                <span class="inv-logo-mark">IN</span> InNovaIdeia
+            </a>
+            <ul class="inv-nav-links" id="invNavLinks" role="menubar">
+                <li role="none"><a href="#home" role="menuitem" class="active">Home</a></li>
+                <li role="none"><a href="#empresa" role="menuitem">Empresa</a></li>
+                <li role="none"><a href="#servicos" role="menuitem">Serviços</a></li>
+                <li role="none"><a href="#solucoes" role="menuitem">Soluções</a></li>
+                <li role="none"><a href="#projetos" role="menuitem">Projetos</a></li>
+                <li role="none"><a href="#tecnologias" role="menuitem">Tecnologias</a></li>
+                <li role="none"><a href="#contato" role="menuitem">Contato</a></li>
+                <li role="none"><a href="#contato" class="inv-nav-cta" role="menuitem">Orçamento</a></li>
+            </ul>
+            <button class="inv-hamburger" id="invHamburger" aria-label="Abrir menu" aria-expanded="false">
+                <i class="fa-solid fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+    <div class="inv-nav-overlay" id="invNavOverlay"></div>
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="inv-hero" id="home" aria-labelledby="heroTitle">
+        <div class="inv-hero-corners"><span></span><span></span><span></span><span></span></div>
+        <div class="container">
+            <p class="inv-hero-eyebrow">Folha 01 — Apresentação Técnica</p>
+            <h1 id="heroTitle">InNovaIdeia<br>Assessoria em Tecnologia</h1>
+            <p class="inv-hero-lede">Projetamos software com a precisão de uma prancheta de engenharia: consultoria, desenvolvimento full stack e inteligência artificial aplicada — do rascunho ao sistema em produção.</p>
+            <div class="inv-hero-btns">
+                <a href="#contato" class="inv-btn inv-btn-primary">Solicitar orçamento</a>
+                <a href="#servicos" class="inv-btn inv-btn-outline">Conhecer serviços</a>
+            </div>
+        </div>
+        <!-- Blueprint decorativo -->
+        <svg class="inv-hero-blueprint" viewBox="0 0 400 500" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect x="20" y="20" width="360" height="460" stroke="#8FA3C4" stroke-width="0.8" stroke-dasharray="6 4" fill="none" opacity="0.5"/>
+            <circle cx="200" cy="180" r="60" stroke="#8FA3C4" stroke-width="0.8" stroke-dasharray="4 3" fill="none" opacity="0.5"/>
+            <line x1="80" y1="300" x2="320" y2="300" stroke="#8FA3C4" stroke-width="0.6" opacity="0.35"/>
+            <line x1="80" y1="340" x2="280" y2="340" stroke="#8FA3C4" stroke-width="0.6" opacity="0.35"/>
+            <line x1="80" y1="380" x2="300" y2="380" stroke="#8FA3C4" stroke-width="0.6" opacity="0.35"/>
+            <rect x="140" y="400" width="50" height="40" stroke="#E8A33D" stroke-width="1" fill="none" opacity="0.6"/>
+            <text x="200" y="425" text-anchor="middle" fill="#E8A33D" font-size="10" font-family="monospace" opacity="0.7">DB</text>
+        </svg>
+    </section>
+
+    <!-- ═══════════ INDICADORES ═══════════ -->
+    <section class="inv-section" aria-labelledby="indTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 02 — Indicadores</span>
+            <h2 id="indTitle">Números que falam</h2>
+            <p class="inv-sub">Resultados construídos ao longo de mais de uma década de atuação.</p>
+            <div class="inv-indicators-grid">
+                <div class="inv-indicator inv-animate-on-scroll">
+                    <span class="inv-num" data-count="15">0</span>
+                    <span class="inv-label">+ anos de mercado</span>
+                </div>
+                <div class="inv-indicator inv-animate-on-scroll">
+                    <span class="inv-num" data-count="120">0</span>
+                    <span class="inv-label">+ projetos entregues</span>
+                </div>
+                <div class="inv-indicator inv-animate-on-scroll">
+                    <span class="inv-num" data-count="25">0</span>
+                    <span class="inv-label">+ tecnologias</span>
+                </div>
+                <div class="inv-indicator inv-animate-on-scroll">
+                    <span class="inv-num" data-count="100">0</span>
+                    <span class="inv-label">% personalizado</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ QUEM SOMOS ═══════════ -->
+    <section class="inv-section" id="empresa" aria-labelledby="empresaTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 03 — Quem Somos</span>
+            <h2 id="empresaTitle">A InNovaIdeia</h2>
+            <p class="inv-sub">Uma empresa de engenharia de software que trata cada projeto como uma peça técnica: com escopo claro, stack enxuta e entrega que roda em produção.</p>
+            <div class="row g-4">
+                <div class="col-md-6">
+                    <div class="inv-card-serv" style="clip-path:none; padding:30px;">
+                        <h3><i class="fa-solid fa-bullseye inv-card-icon" style="font-size:22px;"></i> Missão</h3>
+                        <p style="color:var(--steel);font-size:14px;">Transformar desafios de negócio em software robusto, utilizando tecnologia de ponta com responsabilidade e transparência.</p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="inv-card-serv" style="clip-path:none; padding:30px;">
+                        <h3><i class="fa-solid fa-eye inv-card-icon" style="font-size:22px;"></i> Visão</h3>
+                        <p style="color:var(--steel);font-size:14px;">Ser referência em desenvolvimento Full Stack e IA aplicada, reconhecida pela precisão técnica e resultados mensuráveis.</p>
+                    </div>
+                </div>
+                <div class="col-12">
+                    <div class="inv-card-serv" style="clip-path:none; padding:30px;">
+                        <h3><i class="fa-solid fa-gem inv-card-icon" style="font-size:22px;"></i> Valores</h3>
+                        <div class="d-flex flex-wrap gap-3 mt-2">
+                            <span class="inv-tech-item" style="flex:1;min-width:100px;">Inovação</span>
+                            <span class="inv-tech-item" style="flex:1;min-width:100px;">Transparência</span>
+                            <span class="inv-tech-item" style="flex:1;min-width:100px;">Performance</span>
+                            <span class="inv-tech-item" style="flex:1;min-width:100px;">Excelência</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ SERVIÇOS ═══════════ -->
+    <section class="inv-section" id="servicos" aria-labelledby="servTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 04 — Serviços</span>
+            <h2 id="servTitle">O que sai da prancheta</h2>
+            <p class="inv-sub">Três frentes de trabalho com o mesmo padrão: escopo claro, stack enxuta e entrega em produção.</p>
+            <div class="inv-cards-grid">
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-code inv-card-icon"></i>
+                    <h3>Desenvolvimento Full Stack</h3>
+                    <p>Sistemas sob medida — do CRUD ao produto completo, com backend robusto e frontend responsivo.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-brain inv-card-icon"></i>
+                    <h3>Inteligência Artificial</h3>
+                    <p>Automação com agentes de IA, visão computacional e integrações que resolvem gargalos reais.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-chalkboard-user inv-card-icon"></i>
+                    <h3>Consultoria & Treinamento</h3>
+                    <p>Arquitetura de sistemas, estratégia tecnológica e workshops de lógica de programação.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-cloud inv-card-icon"></i>
+                    <h3>APIs & Cloud</h3>
+                    <p>Integrações REST, deploy em nuvem e arquitetura serverless com Supabase e Docker.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-database inv-card-icon"></i>
+                    <h3>Banco de Dados</h3>
+                    <p>Modelagem, otimização e migração de dados com SQLite, PostgreSQL e Supabase.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-robot inv-card-icon"></i>
+                    <h3>Automação</h3>
+                    <p>Chatbots, IA generativa, visão computacional e pipelines de automação inteligente.</p>
+                    <a href="#contato" class="inv-card-link">Saber mais →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ SOLUÇÕES ═══════════ -->
+    <section class="inv-section" id="solucoes" aria-labelledby="solTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 05 — Soluções</span>
+            <h2 id="solTitle">Problemas que resolvemos</h2>
+            <p class="inv-sub">Aplicações que saem do papel e geram impacto real no seu negócio.</p>
+            <div class="inv-tech-grid">
+                <div class="inv-tech-item"><i class="fa-solid fa-gears"></i> Automação de processos</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-building"></i> Sistemas internos</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-globe"></i> Aplicações web</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-door-open"></i> Portais corporativos</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-chart-pie"></i> Gestão empresarial</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-magnifying-glass-chart"></i> Análise de dados</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-table"></i> Dashboards</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-comments"></i> Chatbots</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-microchip"></i> IA generativa</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-eye"></i> Visão computacional</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ TECNOLOGIAS ═══════════ -->
+    <section class="inv-section" id="tecnologias" aria-labelledby="techTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 06 — Stack Técnico</span>
+            <h2 id="techTitle">Tecnologias</h2>
+            <p class="inv-sub">As ferramentas que sustentam cada projeto entregue pela InNovaIdeia.</p>
+            <div class="inv-tech-grid">
+                <div class="inv-tech-item"><i class="fa-brands fa-python"></i> Python</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-flask"></i> Flask</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-bolt"></i> FastAPI</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-js"></i> JavaScript</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-bootstrap"></i> Bootstrap</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-html5"></i> HTML5</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-css3-alt"></i> CSS3</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-database"></i> SQLite</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-server"></i> PostgreSQL</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-cloud-arrow-up"></i> Supabase</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-docker"></i> Docker</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-git-alt"></i> Git / GitHub</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-plug"></i> REST API</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-file-code"></i> JSON</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-robot"></i> OpenAI / Groq</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-link"></i> LangChain</div>
+                <div class="inv-tech-item"><i class="fa-brands fa-linux"></i> Linux / Termux</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ PROJETOS ═══════════ -->
+    <section class="inv-section" id="projetos" aria-labelledby="projTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 07 — Portfólio</span>
+            <h2 id="projTitle">Projetos entregues</h2>
+            <p class="inv-sub">Cases reais que mostram nossa capacidade de execução.</p>
+            <div class="inv-cards-grid">
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-flask inv-card-icon"></i>
+                    <h3>InDataLab</h3>
+                    <p>Plataforma de análise de dados com dashboards interativos e relatórios automatizados.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">Python · Flask · Chart.js</span>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-building inv-card-icon"></i>
+                    <h3>InNova Imóvel</h3>
+                    <p>Sistema de gestão imobiliária com CRM integrado e portal de autoatendimento.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">Flask · SQLite · Bootstrap</span>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-file-alt inv-card-icon"></i>
+                    <h3>Gerador Inteligente de Currículos</h3>
+                    <p>Ferramenta com IA para criação otimizada de currículos profissionais.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">OpenAI · Flask · React</span>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-users inv-card-icon"></i>
+                    <h3>Sistema CRM</h3>
+                    <p>CRM completo com pipeline de vendas, follow-up automático e relatórios.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">Python · Flask · PostgreSQL</span>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-chart-line inv-card-icon"></i>
+                    <h3>Dashboard Analítico</h3>
+                    <p>Painel de BI com métricas em tempo real e exportação de relatórios.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">FastAPI · Supabase · D3.js</span>
+                </div>
+                <div class="inv-card-serv inv-animate-on-scroll">
+                    <i class="fa-solid fa-calculator inv-card-icon"></i>
+                    <h3>Sistema Financeiro</h3>
+                    <p>Controle financeiro com conciliação bancária e fluxo de caixa projetado.</p>
+                    <span class="inv-chip" style="font-family:var(--mono);font-size:10px;border:1px solid var(--line-strong);padding:3px 8px;border-radius:2px;color:var(--steel);">Flask · SQLite · Bootstrap</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ PROCESSO ═══════════ -->
+    <section class="inv-section" aria-labelledby="procTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 08 — Processo</span>
+            <h2 id="procTitle">Como trabalhamos</h2>
+            <p class="inv-sub">Da ideia ao deploy, um processo claro e validado em cada etapa.</p>
+            <div class="inv-timeline">
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Levantamento</h4>
+                    <p>Requisitos</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Planejamento</h4>
+                    <p>Escopo</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Arquitetura</h4>
+                    <p>Estrutura</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Desenvolvimento</h4>
+                    <p>Código</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Testes</h4>
+                    <p>Validação</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Deploy</h4>
+                    <p>Produção</p>
+                </div>
+                <div class="inv-timeline-step inv-animate-on-scroll">
+                    <div class="inv-timeline-dot"></div>
+                    <h4>Suporte</h4>
+                    <p>Evolução</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ DIFERENCIAIS ═══════════ -->
+    <section class="inv-section" aria-labelledby="difTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 09 — Diferenciais</span>
+            <h2 id="difTitle">Por que a InNovaIdeia?</h2>
+            <p class="inv-sub">Compromissos que fazem diferença na entrega final.</p>
+            <div class="inv-tech-grid">
+                <div class="inv-tech-item"><i class="fa-solid fa-broom"></i> Código limpo</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-arrows-up-down-left-right"></i> Arquitetura escalável</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-microchip"></i> IA integrada</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-check-double"></i> Boas práticas</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-book"></i> Documentação</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-shield-halved"></i> Segurança</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-gauge-high"></i> Performance</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-wrench"></i> Manutenção</div>
+                <div class="inv-tech-item"><i class="fa-solid fa-headset"></i> Suporte contínuo</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ DEPOIMENTOS ═══════════ -->
+    <section class="inv-section" aria-labelledby="depTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 10 — Depoimentos</span>
+            <h2 id="depTitle">Quem já trabalhou conosco</h2>
+            <div id="invTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="inv-testimonial-card">
+                            <div class="inv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <blockquote>"Profissionalismo e qualidade técnica excepcionais. O sistema entregue superou nossas expectativas."</blockquote>
+                            <p class="inv-author">— Maria S., Diretora Comercial</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="inv-testimonial-card">
+                            <div class="inv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <blockquote>"A automação com IA reduziu 60% do retrabalho. Resultado rápido e mensurável."</blockquote>
+                            <p class="inv-author">— Carlos R., Gerente de Operações</p>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="inv-testimonial-card">
+                            <div class="inv-stars"><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
+                            <blockquote>"Entrega no prazo, código limpo e suporte sempre disponível. Parceria de confiança."</blockquote>
+                            <p class="inv-author">— Ana L., CEO Startup Fintech</p>
+                        </div>
+                    </div>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#invTestimonialCarousel" data-bs-slide="prev" style="filter:invert(70%);">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Anterior</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#invTestimonialCarousel" data-bs-slide="next" style="filter:invert(70%);">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Próximo</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FAQ ═══════════ -->
+    <section class="inv-section" aria-labelledby="faqTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 11 — FAQ</span>
+            <h2 id="faqTitle">Perguntas frequentes</h2>
+            <div class="inv-accordion accordion" id="invFAQ">
+                <div class="accordion-item">
+                    <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">Qual o prazo médio de um projeto?</button></h3>
+                    <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#invFAQ"><div class="accordion-body">Depende do escopo. Projetos menores (MVP) podem levar de 2 a 4 semanas; sistemas mais complexos, de 2 a 4 meses. Sempre definimos cronograma claro na fase de planejamento.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">Vocês oferecem suporte após a entrega?</button></h3>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#invFAQ"><div class="accordion-body">Sim. Todo projeto inclui um período de garantia e suporte técnico. Também oferecemos planos de manutenção contínua para evolução do sistema.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">Trabalham com projetos remotos?</button></h3>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#invFAQ"><div class="accordion-body">Sim, 100% dos projetos podem ser conduzidos remotamente. Utilizamos ferramentas de comunicação assíncrona e reuniões de alinhamento via videoconferência.</div></div>
+                </div>
+                <div class="accordion-item">
+                    <h3 class="accordion-header"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">Quais formas de pagamento?</button></h3>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#invFAQ"><div class="accordion-body">Trabalhamos com pagamento por etapa (milestones), PIX, transferência bancária ou boleto. O modelo é definido na proposta comercial.</div></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CTA ═══════════ -->
+    <section class="inv-section" aria-labelledby="ctaTitle">
+        <div class="container">
+            <div class="inv-cta-section">
+                <h2 id="ctaTitle">Vamos tirar seu projeto do papel?</h2>
+                <p>Entre em contato agora mesmo e receba uma avaliação técnica gratuita.</p>
+                <a href="#contato" class="inv-btn inv-btn-primary" style="font-size:15px;padding:16px 32px;">Solicitar orçamento</a>
+                <a href="https://wa.me/5516993117529" target="_blank" rel="noopener" class="inv-btn inv-btn-outline" style="font-size:15px;padding:16px 32px;margin-left:12px;">
+                    <i class="fa-brands fa-whatsapp"></i> WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ CONTATO ═══════════ -->
+    <section class="inv-section" id="contato" aria-labelledby="contatoTitle">
+        <div class="container">
+            <span class="inv-eyebrow-sm">Folha 12 — Contato</span>
+            <h2 id="contatoTitle">Fale conosco</h2>
+            <p class="inv-sub">Preencha o formulário abaixo e retornaremos em até 24 horas úteis.</p>
+            <div class="row g-4">
+                <div class="col-lg-7">
+                    <form class="inv-form" id="invContactForm" novalidate>
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="invNome" class="form-label">Nome *</label>
+                                <input type="text" class="form-control" id="invNome" name="nome" required placeholder="Seu nome completo">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invEmpresa" class="form-label">Empresa</label>
+                                <input type="text" class="form-control" id="invEmpresa" name="empresa" placeholder="Nome da empresa (opcional)">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invTelefone" class="form-label">Telefone *</label>
+                                <input type="tel" class="form-control" id="invTelefone" name="telefone" required placeholder="(16) 99999-9999">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="invEmail" class="form-label">E-mail *</label>
+                                <input type="email" class="form-control" id="invEmail" name="email" required placeholder="seu@email.com">
+                            </div>
+                            <div class="col-12">
+                                <label for="invServico" class="form-label">Serviço de interesse</label>
+                                <select class="form-control" id="invServico" name="servico">
+                                    <option value="">Selecione...</option>
+                                    <option value="Desenvolvimento Full Stack">Desenvolvimento Full Stack</option>
+                                    <option value="Inteligência Artificial">Inteligência Artificial</option>
+                                    <option value="Consultoria">Consultoria & Treinamento</option>
+                                    <option value="APIs & Cloud">APIs & Cloud</option>
+                                    <option value="Banco de Dados">Banco de Dados</option>
+                                    <option value="Automação">Automação</option>
+                                    <option value="Outro">Outro</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label for="invMensagem" class="form-label">Mensagem *</label>
+                                <textarea class="form-control" id="invMensagem" name="mensagem" required placeholder="Descreva seu projeto ou necessidade..."></textarea>
+                            </div>
+                            <div class="col-12">
+                                <button type="submit" class="inv-btn-submit">Enviar mensagem</button>
+                            </div>
+                        </div>
+                        <div class="inv-form-feedback" id="invFormFeedback"></div>
+                    </form>
+                </div>
+                <div class="col-lg-5">
+                    <div class="inv-card-serv" style="clip-path:none;padding:30px;height:100%;">
+                        <h3><i class="fa-solid fa-map-pin inv-card-icon" style="font-size:22px;"></i> Nossos dados</h3>
+                        <p style="color:var(--steel);font-size:14px;line-height:2;">
+                            <strong style="color:var(--amber);">Endereço:</strong><br>Rua Vergílio José Gomes, 2652<br>Franca — SP, Brasil<br><br>
+                            <strong style="color:var(--amber);">E-mail:</strong><br>innovaideia2023@gmail.com<br><br>
+                            <strong style="color:var(--amber);">Telefone:</strong><br>(16) 99311-7529<br><br>
+                            <strong style="color:var(--amber);">GitHub:</strong><br>github.com/Foxactive1
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer class="inv-footer" role="contentinfo">
+        <div class="container">
+            <div class="inv-footer-grid">
+                <div>
+                    <h5>InNovaIdeia</h5>
+                    <p style="color:var(--steel);font-size:13px;line-height:1.7;">Assessoria em Tecnologia — Software sob medida com precisão de engenharia. Desde 2009 em Franca-SP.</p>
+                    <div class="inv-social-icons">
+                        <a href="https://github.com/Foxactive1" target="_blank" rel="noopener" aria-label="GitHub"><i class="fa-brands fa-github"></i></a>
+                        <a href="https://wa.me/5516993117529" target="_blank" rel="noopener" aria-label="WhatsApp"><i class="fa-brands fa-whatsapp"></i></a>
+                        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn"><i class="fa-brands fa-linkedin-in"></i></a>
+                        <a href="https://instagram.com" target="_blank" rel="noopener" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div>
+                    <h5>Serviços</h5>
+                    <a href="#servicos">Desenvolvimento</a>
+                    <a href="#servicos">IA Aplicada</a>
+                    <a href="#servicos">Consultoria</a>
+                    <a href="#servicos">Treinamento</a>
+                </div>
+                <div>
+                    <h5>Links</h5>
+                    <a href="#empresa">Empresa</a>
+                    <a href="#projetos">Projetos</a>
+                    <a href="#tecnologias">Tecnologias</a>
+                    <a href="#contato">Contato</a>
+                </div>
+                <div>
+                    <h5>Legal</h5>
+                    <a href="#">Política de Privacidade</a>
+                    <a href="#">Termos de Uso</a>
+                </div>
+            </div>
+            <div class="inv-footer-bottom">
+                <p>© 2026 InNovaIdeia Assessoria em Tecnologia. Todos os direitos reservados.</p>
+                <p>Vergílio José Gomes, 2652 — Franca, SP</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ═══════════ WHATSAPP FLOAT ═══════════ -->
+    <a href="https://wa.me/5516993117529" class="inv-whatsapp-float" target="_blank" rel="noopener" aria-label="Fale pelo WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+    </a>
+
+    <!-- ═══════════ BACK TO TOP ═══════════ -->
+    <a href="#home" class="inv-back-top" id="invBackTop" aria-label="Voltar ao topo">
+        <i class="fa-solid fa-chevron-up"></i>
+    </a>
+
+    <!-- ═══════════ SCRIPTS ═══════════ -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+    <script>
+        (function() {
+            // ── Loader ──────────────────────
+            const loader = document.getElementById('inv-loader');
+            window.addEventListener('load', () => {
+                setTimeout(() => loader.classList.add('hidden'), 400);
+            });
+
+            // ── Navbar scroll ──────────────
+            const navbar = document.getElementById('invNavbar');
+            const backTop = document.getElementById('invBackTop');
+            window.addEventListener('scroll', () => {
+                const scrolled = window.scrollY > 60;
+                navbar.classList.toggle('scrolled', scrolled);
+                backTop.classList.toggle('visible', scrolled);
+            });
+
+            // ── Mobile menu ────────────────
+            const hamburger = document.getElementById('invHamburger');
+            const navLinks = document.getElementById('invNavLinks');
+            const overlay = document.getElementById('invNavOverlay');
+
+            function closeMenu() {
+                navLinks.classList.remove('open');
+                overlay.classList.remove('show');
+                hamburger.setAttribute('aria-expanded', 'false');
+            }
+
+            hamburger.addEventListener('click', () => {
+                const isOpen = navLinks.classList.toggle('open');
+                overlay.classList.toggle('show', isOpen);
+                hamburger.setAttribute('aria-expanded', isOpen);
+            });
+            overlay.addEventListener('click', closeMenu);
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navLinks.classList.contains('open')) closeMenu();
+                });
+            });
+
+            // ── Active nav link on scroll ──
+            const sections = document.querySelectorAll('section[id]');
+            const navAnchors = navLinks.querySelectorAll('a[href^="#"]');
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(sec => {
+                    const top = sec.offsetTop - 120;
+                    if (window.scrollY >= top) current = sec.getAttribute('id');
+                });
+                navAnchors.forEach(a => {
+                    a.classList.toggle('active', a.getAttribute('href') === '#' + current);
+                });
+            });
+
+            // ── Animate on scroll ──────────
+            const animElements = document.querySelectorAll('.inv-animate-on-scroll');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+            animElements.forEach(el => observer.observe(el));
+
+            // ── Counter animation ──────────
+            const counterEls = document.querySelectorAll('.inv-num[data-count]');
+            const counterObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        const target = parseInt(el.getAttribute('data-count'));
+                        const duration = 1800;
+                        const start = performance.now();
+
+                        function update(now) {
+                            const elapsed = now - start;
+                            const progress = Math.min(elapsed / duration, 1);
+                            const eased = 1 - Math.pow(1 - progress, 3);
+                            el.textContent = Math.floor(eased * target) + '+';
+                            if (progress < 1) requestAnimationFrame(update);
+                            else el.textContent = target + '+';
+                        }
+                        requestAnimationFrame(update);
+                        counterObserver.unobserve(el);
+                    }
+                });
+            }, { threshold: 0.6 });
+            counterEls.forEach(el => counterObserver.observe(el));
+
+            // ── Form validation & mask ──────
+            const form = document.getElementById('invContactForm');
+            const feedback = document.getElementById('invFormFeedback');
+            const telefoneInput = document.getElementById('invTelefone');
+
+            telefoneInput.addEventListener('input', function() {
+                let val = this.value.replace(/\D/g, '');
+                if (val.length > 11) val = val.slice(0, 11);
+                if (val.length > 7) val = val.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+                else if (val.length > 2) val = val.replace(/^(\d{2})(\d+)$/, '($1) $2');
+                this.value = val;
+            });
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                feedback.className = 'inv-form-feedback';
+                feedback.textContent = '';
+
+                const nome = document.getElementById('invNome').value.trim();
+                const email = document.getElementById('invEmail').value.trim();
+                const telefone = document.getElementById('invTelefone').value.trim();
+                const mensagem = document.getElementById('invMensagem').value.trim();
+
+                if (!nome || !email || !telefone || !mensagem) {
+                    feedback.className = 'inv-form-feedback error';
+                    feedback.textContent =
+                        '⚠️ Por favor, preencha todos os campos obrigatórios (Nome, Telefone, E-mail e Mensagem).';
+                    feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(email)) {
+                    feedback.className = 'inv-form-feedback error';
+                    feedback.textContent = '⚠️ Por favor, insira um e-mail válido.';
+                    feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+                // Simula envio
+                feedback.className = 'inv-form-feedback success';
+                feedback.textContent =
+                    '✓ Mensagem enviada com sucesso! Entraremos em contato em até 24 horas úteis.';
+                form.reset();
+                feedback.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
+
+            // ── Lazy loading for images ─────
+            document.querySelectorAll('img[loading="lazy"]').forEach(img => {
+                img.setAttribute('loading', 'lazy');
+            });
+
+            console.log('InNovaIdeia — Site institucional carregado. Pronto para integração Flask/Jinja2.');
+        })();
+    </script>
+
+    <!-- ═══════════ JSON-LD Schema ═══════════ -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@type": "LocalBusiness",
+            "name": "InNovaIdeia Assessoria em Tecnologia",
+            "description": "Consultoria, desenvolvimento full stack e inteligência artificial aplicada.",
+            "url": "https://innovaideia.com.br",
+            "telephone": "+55 16 99311-7529",
+            "email": "innovaideia2023@gmail.com",
+            "address": {
+                "@type": "PostalAddress",
+                "streetAddress": "Rua Vergílio José Gomes, 2652",
+                "addressLocality": "Franca",
+                "addressRegion": "SP",
+                "addressCountry": "BR"
+            },
+            "foundingDate": "2009",
+            "founder": {
+                "@type": "Person",
+                "name": "Dione Castro Alves"
+            },
+            "sameAs": [
+                "https://github.com/Foxactive1",
+                "https://wa.me/5516993117529"
+            ]
+        }
+    </script>
+</body>
+</html>
