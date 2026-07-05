@@ -1,0 +1,32 @@
+[
+    {
+        "icone": "fa-solid fa-code",
+        "titulo": "Desenvolvimento Full Stack",
+        "descricao": "Sistemas sob medida — do CRUD ao produto completo, com backend robusto e frontend responsivo."
+    },
+    {
+        "icone": "fa-solid fa-brain",
+        "titulo": "Inteligência Artificial",
+        "descricao": "Automação com agentes de IA, visão computacional e integrações que resolvem gargalos reais."
+    },
+    {
+        "icone": "fa-solid fa-chalkboard-user",
+        "titulo": "Consultoria & Treinamento",
+        "descricao": "Arquitetura de sistemas, estratégia tecnológica e workshops de lógica de programação."
+    },
+    {
+        "icone": "fa-solid fa-cloud",
+        "titulo": "APIs & Cloud",
+        "descricao": "Integrações REST, deploy em nuvem e arquitetura serverless com Supabase e Docker."
+    },
+    {
+        "icone": "fa-solid fa-database",
+        "titulo": "Banco de Dados",
+        "descricao": "Modelagem, otimização e migração de dados com SQLite, PostgreSQL e Supabase."
+    },
+    {
+        "icone": "fa-solid fa-robot",
+        "titulo": "Automação",
+        "descricao": "Chatbots, IA generativa, visão computacional e pipelines de automação inteligente."
+    }
+]

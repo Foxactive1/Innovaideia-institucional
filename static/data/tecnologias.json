@@ -1,0 +1,19 @@
+[
+    {"nome": "Python", "icone": "fa-brands fa-python"},
+    {"nome": "Flask", "icone": "fa-solid fa-flask"},
+    {"nome": "FastAPI", "icone": "fa-solid fa-bolt"},
+    {"nome": "JavaScript", "icone": "fa-brands fa-js"},
+    {"nome": "Bootstrap", "icone": "fa-brands fa-bootstrap"},
+    {"nome": "HTML5", "icone": "fa-brands fa-html5"},
+    {"nome": "CSS3", "icone": "fa-brands fa-css3-alt"},
+    {"nome": "SQLite", "icone": "fa-solid fa-database"},
+    {"nome": "PostgreSQL", "icone": "fa-solid fa-server"},
+    {"nome": "Supabase", "icone": "fa-solid fa-cloud-arrow-up"},
+    {"nome": "Docker", "icone": "fa-brands fa-docker"},
+    {"nome": "Git / GitHub", "icone": "fa-brands fa-git-alt"},
+    {"nome": "REST API", "icone": "fa-solid fa-plug"},
+    {"nome": "JSON", "icone": "fa-solid fa-file-code"},
+    {"nome": "OpenAI / Groq", "icone": "fa-solid fa-robot"},
+    {"nome": "LangChain", "icone": "fa-solid fa-link"},
+    {"nome": "Linux / Termux", "icone": "fa-brands fa-linux"}
+]

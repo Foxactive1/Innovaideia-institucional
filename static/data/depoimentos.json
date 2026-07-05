@@ -1,0 +1,20 @@
+[
+    {
+        "autor": "Maria S.",
+        "cargo": "Diretora Comercial",
+        "texto": "Profissionalismo e qualidade técnica excepcionais. O sistema entregue superou nossas expectativas.",
+        "estrelas": 5
+    },
+    {
+        "autor": "Carlos R.",
+        "cargo": "Gerente de Operações",
+        "texto": "A automação com IA reduziu 60% do retrabalho. Resultado rápido e mensurável.",
+        "estrelas": 5
+    },
+    {
+        "autor": "Ana L.",
+        "cargo": "CEO Startup Fintech",
+        "texto": "Entrega no prazo, código limpo e suporte sempre disponível. Parceria de confiança.",
+        "estrelas": 5
+    }
+]

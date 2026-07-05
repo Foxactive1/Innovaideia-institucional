@@ -1,0 +1,98 @@
+[
+  {
+    "icone": "fa-solid fa-flask",
+    "titulo": "InDataLab",
+    "descricao": "Plataforma de análise de dados com dashboards interativos e relatórios automatizados.",
+    "tags": ["Python", "Flask", "Chart.js"]
+  },
+  {
+    "icone": "fa-solid fa-building",
+    "titulo": "InNova Imóvel",
+    "descricao": "Sistema de gestão imobiliária com CRM integrado e portal de autoatendimento.",
+    "tags": ["Flask", "SQLite", "Bootstrap"]
+  },
+  {
+    "icone": "fa-solid fa-file-alt",
+    "titulo": "Gerador Inteligente de Currículos",
+    "descricao": "Ferramenta com IA para criação otimizada de currículos profissionais.",
+    "tags": ["OpenAI", "Flask", "React"]
+  },
+  {
+    "icone": "fa-solid fa-users",
+    "titulo": "Sistema CRM",
+    "descricao": "CRM completo com pipeline de vendas, follow-up automático e relatórios.",
+    "tags": ["Python", "Flask", "PostgreSQL"]
+  },
+  {
+    "icone": "fa-solid fa-chart-line",
+    "titulo": "Dashboard Analítico",
+    "descricao": "Painel de BI com métricas em tempo real e exportação de relatórios.",
+    "tags": ["FastAPI", "Supabase", "D3.js"]
+  },
+  {
+    "icone": "fa-solid fa-calculator",
+    "titulo": "Sistema Financeiro",
+    "descricao": "Controle financeiro com conciliação bancária e fluxo de caixa projetado.",
+    "tags": ["Flask", "SQLite", "Bootstrap"]
+  },
+  {
+    "icone": "fa-solid fa-robot",
+    "titulo": "InNova AI Studio",
+    "descricao": "Plataforma para criação de agentes inteligentes, chatbots e automações com LLMs.",
+    "tags": ["Python", "Flask", "Groq", "IA"]
+  },
+  {
+    "icone": "fa-solid fa-video",
+    "titulo": "Video AI Generator",
+    "descricao": "Sistema SaaS para geração automática de vídeos com IA, TTS, legendas e publicação em redes sociais.",
+    "tags": ["React", "FastAPI", "FFmpeg", "IA"]
+  },
+  {
+    "icone": "fa-solid fa-book-open",
+    "titulo": "Notebook Inteligente",
+    "descricao": "Ambiente de notebooks com execução de Python, SQL, Markdown, auditoria e IA integrada.",
+    "tags": ["Flask", "Jupyter", "SQLite", "Python"]
+  },
+  {
+    "icone": "fa-solid fa-graduation-cap",
+    "titulo": "Plataforma Educacional",
+    "descricao": "Sistema de cursos, certificados digitais, trilhas de aprendizagem e avaliações online.",
+    "tags": ["Flask", "Bootstrap", "PostgreSQL"]
+  },
+  {
+    "icone": "fa-solid fa-store",
+    "titulo": "E-commerce Inteligente",
+    "descricao": "Loja virtual com recomendações por IA, gestão de estoque e painel administrativo.",
+    "tags": ["React", "Flask", "Stripe"]
+  },
+  {
+    "icone": "fa-solid fa-code-branch",
+    "titulo": "API Hub",
+    "descricao": "Central de APIs REST para integração de sistemas corporativos e microsserviços.",
+    "tags": ["FastAPI", "REST", "JWT", "Docker"]
+  },
+  {
+    "icone": "fa-solid fa-database",
+    "titulo": "Data Lake Corporativo",
+    "descricao": "Plataforma para ingestão, organização e análise de grandes volumes de dados.",
+    "tags": ["Python", "PostgreSQL", "Supabase"]
+  },
+  {
+    "icone": "fa-solid fa-chart-pie",
+    "titulo": "BI Executive",
+    "descricao": "Dashboards executivos com indicadores estratégicos e relatórios automatizados.",
+    "tags": ["Chart.js", "D3.js", "Python"]
+  },
+  {
+    "icone": "fa-solid fa-coins",
+    "titulo": "Trade Analytics",
+    "descricao": "Sistema de análise de mercado financeiro com integração a corretoras e inteligência artificial.",
+    "tags": ["Python", "FOREX API", "IA"]
+  },
+  {
+    "icone": "fa-solid fa-shield-halved",
+    "titulo": "Security Center",
+    "descricao": "Painel de autenticação, auditoria de acessos, logs e monitoramento de segurança.",
+    "tags": ["JWT", "OAuth2", "Flask"]
+  }
+]

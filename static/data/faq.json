@@ -1,1 +1,18 @@
-
+[
+    {
+        "pergunta": "Qual o prazo médio de um projeto?",
+        "resposta": "Depende do escopo. Projetos menores (MVP) podem levar de 2 a 4 semanas; sistemas mais complexos, de 2 a 4 meses. Sempre definimos cronograma claro na fase de planejamento."
+    },
+    {
+        "pergunta": "Vocês oferecem suporte após a entrega?",
+        "resposta": "Sim. Todo projeto inclui um período de garantia e suporte técnico. Também oferecemos planos de manutenção contínua para evolução do sistema."
+    },
+    {
+        "pergunta": "Trabalham com projetos remotos?",
+        "resposta": "Sim, 100% dos projetos podem ser conduzidos remotamente. Utilizamos ferramentas de comunicação assíncrona e reuniões de alinhamento via videoconferência."
+    },
+    {
+        "pergunta": "Quais formas de pagamento?",
+        "resposta": "Trabalhamos com pagamento por etapa (milestones), PIX, transferência bancária ou boleto. O modelo é definido na proposta comercial."
+    }
+]
