@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}InNovaIdeia — Tecnologias{% endblock %}
+
+{% block content %}
+    {% with titulo='Tecnologias' %}{% include 'components/page_header.html' %}{% endwith %}
+    {% include 'components/tecnologias_grid.html' %}
+    {% include 'components/cta.html' %}
+{% endblock %}
