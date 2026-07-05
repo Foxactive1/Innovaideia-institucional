@@ -1,0 +1,21 @@
+<nav class="inv-navbar" id="invNavbar" aria-label="Navegação principal">
+    <div class="container">
+        <a href="{{ url_for('index') }}#home" class="inv-nav-logo" aria-label="InNovaIdeia — Ir ao topo">
+            <span class="inv-logo-mark">IN</span> InNovaIdeia
+        </a>
+        <ul class="inv-nav-links" id="invNavLinks" role="menubar">
+            <li role="none"><a href="{{ url_for('index') }}#home" role="menuitem" class="{{ 'active' if request.endpoint == 'index' else '' }}">Home</a></li>
+            <li role="none"><a href="{{ url_for('sobre') }}" role="menuitem" class="{{ 'active' if request.endpoint == 'sobre' else '' }}">Empresa</a></li>
+            <li role="none"><a href="{{ url_for('servicos') }}" role="menuitem" class="{{ 'active' if request.endpoint == 'servicos' else '' }}">Serviços</a></li>
+            <li role="none"><a href="{{ url_for('index') }}#solucoes" role="menuitem">Soluções</a></li>
+            <li role="none"><a href="{{ url_for('projetos') }}" role="menuitem" class="{{ 'active' if request.endpoint == 'projetos' else '' }}">Projetos</a></li>
+            <li role="none"><a href="{{ url_for('tecnologias') }}" role="menuitem" class="{{ 'active' if request.endpoint == 'tecnologias' else '' }}">Tecnologias</a></li>
+            <li role="none"><a href="{{ url_for('contato') }}" role="menuitem" class="{{ 'active' if request.endpoint == 'contato' else '' }}">Contato</a></li>
+            <li role="none"><a href="{{ url_for('contato') }}" class="inv-nav-cta" role="menuitem">Orçamento</a></li>
+        </ul>
+        <button class="inv-hamburger" id="invHamburger" aria-label="Abrir menu" aria-expanded="false" aria-controls="invNavLinks">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </div>
+</nav>
+<div class="inv-nav-overlay" id="invNavOverlay"></div>

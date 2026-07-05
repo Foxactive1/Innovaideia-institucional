@@ -1,0 +1,29 @@
+<section class="inv-section" aria-labelledby="depTitle">
+    <div class="container">
+        <span class="inv-eyebrow-sm">Folha 10 — Depoimentos</span>
+        <h2 id="depTitle">Quem já trabalhou conosco</h2>
+        <div id="invTestimonialCarousel" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+            <div class="carousel-inner">
+                {% for depo in depoimentos %}
+                <div class="carousel-item {% if loop.first %}active{% endif %}">
+                    <div class="inv-testimonial-card">
+                        <div class="inv-stars">
+                            {% for _ in range(depo.estrelas|default(5)) %}<i class="fa-solid fa-star"></i>{% endfor %}
+                        </div>
+                        <blockquote>"{{ depo.texto }}"</blockquote>
+                        <p class="inv-author">— {{ depo.autor }}{% if depo.cargo %}, {{ depo.cargo }}{% endif %}</p>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#invTestimonialCarousel" data-bs-slide="prev" style="filter:invert(70%);">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Anterior</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#invTestimonialCarousel" data-bs-slide="next" style="filter:invert(70%);">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Próximo</span>
+            </button>
+        </div>
+    </div>
+</section>
