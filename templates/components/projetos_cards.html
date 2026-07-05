@@ -1,0 +1,17 @@
+<section class="inv-section" id="projetos" aria-labelledby="projTitle">
+    <div class="container">
+        <span class="inv-eyebrow-sm">Folha 07 — Portfólio</span>
+        <h2 id="projTitle">Projetos entregues</h2>
+        <p class="inv-sub">Cases reais que mostram nossa capacidade de execução.</p>
+        <div class="inv-cards-grid">
+            {% for projeto in projetos %}
+            <div class="inv-card-serv inv-animate-on-scroll">
+                <i class="{{ projeto.icone }} inv-card-icon"></i>
+                <h3>{{ projeto.titulo }}</h3>
+                <p>{{ projeto.descricao }}</p>
+                <span class="inv-chip">{{ projeto.tags|join(' · ') }}</span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

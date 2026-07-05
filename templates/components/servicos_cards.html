@@ -1,0 +1,17 @@
+<section class="inv-section" id="servicos" aria-labelledby="servTitle">
+    <div class="container">
+        <span class="inv-eyebrow-sm">Folha 04 — Serviços</span>
+        <h2 id="servTitle">O que sai da prancheta</h2>
+        <p class="inv-sub">Três frentes de trabalho com o mesmo padrão: escopo claro, stack enxuta e entrega em produção.</p>
+        <div class="inv-cards-grid">
+            {% for servico in servicos %}
+            <div class="inv-card-serv inv-animate-on-scroll">
+                <i class="{{ servico.icone }} inv-card-icon"></i>
+                <h3>{{ servico.titulo }}</h3>
+                <p>{{ servico.descricao }}</p>
+                <a href="{{ url_for('contato') }}" class="inv-card-link">Saber mais →</a>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
