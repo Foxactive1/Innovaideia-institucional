@@ -1,39 +1,39 @@
 # InNovaIdeia — Site Institucional
 
-Site institucional da InNovaIdeia Assessoria em Tecnologia, desenvolvido com **Flask** e arquitetura baseada em dados JSON/JSONL para fácil manutenção e escalabilidade.
+Site institucional da **InNovaIdeia Assessoria em Tecnologia**, desenvolvido com **Flask** e arquitetura baseada em dados JSON para fácil manutenção e escalabilidade.
 
 ---
 
 ## 🚀 Tecnologias
 
-- **Backend:** Flask (Python 3.9+)
+- **Backend:** Flask 3.x (Python 3.9+)
 - **Frontend:** Bootstrap 5, CSS customizado (variáveis, grid, animações), JavaScript nativo
-- **Dados:** JSON e JSONL (armazenamento em arquivos)
-- **Fontes:** IBM Plex Mono + IBM Plex Sans (Google Fonts)
-- **Ícones:** Font Awesome 6
-- **Ambiente:** Python-dotenv (gerenciamento de variáveis)
+- **Dados:** JSON (arquivos estáticos em `static/data/`)
+- **E-mail:** SMTP (formulário de contato assíncrono via `threading`)
+- **Deploy:** Vercel (runtime Python serverless)
 
 ---
 
 ## 📁 Estrutura do Projeto
 
 ```
-
-innovaideia-site/
-├── app.py                      # Servidor Flask (rotas, carregamento de dados)
+innovaideia-institucional/
+├── app.py                      # Servidor Flask (rotas, API, envio de e-mail)
 ├── requirements.txt            # Dependências Python
-├── .env                        # Variáveis de ambiente (não versionado)
+├── vercel.json                 # Configuração de deploy na Vercel
 ├── README.md                   # Este arquivo
 │
-├── templates/                  # Páginas Jinja2
-│   ├── base.html               # Layout base
-│   ├── index.html              # Página inicial (agrega todos os componentes)
+├── templates/                  # Páginas Jinja2 (nome em minúsculas — obrigatório no Linux)
+│   ├── base.html
+│   ├── index.html
 │   ├── sobre.html
 │   ├── servicos.html
 │   ├── projetos.html
 │   ├── tecnologias.html
 │   ├── contato.html
-│   └── components/             # Componentes reutilizáveis
+│   ├── 404.html
+│   ├── 500.html
+│   └── components/              # Componentes reutilizáveis (includes)
 │       ├── navbar.html
 │       ├── hero.html
 │       ├── indicadores.html
@@ -48,171 +48,124 @@ innovaideia-site/
 │       ├── faq.html
 │       ├── cta.html
 │       ├── contato_form.html
+│       ├── page_header.html
+│       ├── timeline.html
 │       └── footer.html
 │
-├── static/
-│   ├── css/
-│   │   ├── style.css           # Estilos principais (consolidado)
-│   │   └── (outros arquivos .css)
-│   ├── js/
-│   │   ├── app.js              # Inicialização, scroll, navbar, animações
-│   │   ├── contact.js          # Validação e envio do formulário
-│   │   └── (demais scripts)
-│   ├── data/                   # Dados em JSON/JSONL (editáveis)
-│   │   ├── empresa.json
-│   │   ├── indicadores.json
-│   │   ├── servicos.json
-│   │   ├── projetos.json
-│   │   ├── tecnologias.json
-│   │   ├── depoimentos.json
-│   │   ├── faq.json
-│   │   └── ... (outros .jsonl)
-│   ├── img/                    # Imagens e logos
-│   └── fonts/                  # Fontes locais (se houver)
-│
-├── assets/                     # Arquivos de design (mockups, banners, etc.)
-├── docs/                       # Documentação técnica
-└── scripts/                    # Scripts auxiliares (validação, otimização)
-
+└── static/
+    ├── css/
+    │   └── style.css
+    ├── js/
+    │   ├── app.js               # Navbar, scroll, animações
+    │   └── contact.js           # Validação e envio do formulário
+    └── data/                    # Conteúdo editável do site (sem tocar em código)
+        ├── empresa.json
+        ├── indicadores.json
+        ├── servicos.json
+        ├── projetos.json
+        ├── tecnologias.json
+        ├── depoimentos.json
+        └── faq.json
 ```
+
+> ⚠️ **Importante:** a pasta de templates deve se chamar `templates` (minúsculo). O Flask procura por esse nome exato via `render_template()`, e em qualquer host Linux (Vercel, Fly.io, Railway) o filesystem é case-sensitive — uma pasta `Templates` com T maiúsculo quebra o carregamento das páginas em produção, mesmo que funcione localmente no Windows/Termux.
 
 ---
 
 ## 🔧 Pré-requisitos
 
 - Python 3.9 ou superior
-- pip (gerenciador de pacotes)
+- pip
 - Git (opcional, para clonar)
 
 ---
 
-## 📦 Instalação e Execução
+## 📦 Instalação e Execução Local
 
-1. **Clone o repositório** (ou baixe os arquivos):
+1. Clone o repositório:
    ```bash
-   git clone https://github.com/seu-usuario/innovaideia-site.git
-   cd innovaideia-site
-```
+   git clone https://github.com/Foxactive1/Innovaideia-institucional.git
+   cd Innovaideia-institucional
+   ```
 
-2. Crie e ative um ambiente virtual (recomendado):
+2. Crie e ative um ambiente virtual:
    ```bash
    python -m venv venv
-   source venv/bin/activate      # Linux/Mac
+   source venv/bin/activate      # Linux/Mac/Termux
    venv\Scripts\activate         # Windows
    ```
+
 3. Instale as dependências:
    ```bash
    pip install -r requirements.txt
    ```
-4. Configure as variáveis de ambiente:
-   · Copie o arquivo .env.example para .env (se existir) ou crie um manualmente:
-     ```bash
-     echo "SECRET_KEY=chave-secreta-aleatoria" > .env
-     echo "DEBUG=True" >> .env
-     ```
-   · Ajuste a SECRET_KEY para um valor único em produção.
+
+4. Configure as variáveis de ambiente (formulário de contato):
+   ```bash
+   export SECRET_KEY="chave-secreta-aleatoria"
+   export SMTP_USER="seu-email@gmail.com"
+   export SMTP_PASSWORD="senha-de-app-do-gmail"
+   export EMAIL_TO="innovaideia2023@gmail.com"
+   ```
+   Sem `SMTP_USER`/`SMTP_PASSWORD`, o formulário continua validando e respondendo 201, mas o e-mail não é enviado (fica só no log).
+
 5. Execute o servidor:
    ```bash
    python app.py
    ```
-6. Acesse http://localhost:5000 no navegador.
+
+6. Acesse `http://localhost:5000`.
 
 ---
 
-🛠 Personalização
+## 🌐 Deploy na Vercel (recomendado)
 
-Conteúdo (textos, serviços, projetos, etc.)
+Este projeto é stateless (sem banco de dados) — a Vercel com runtime Python serverless é a opção mais simples:
 
-Todos os dados estão em arquivos JSON (ou JSONL) dentro de static/data/. Basta editar qualquer um deles e reiniciar o servidor (ou recarregar a página) para ver as alterações.
+1. Garanta que `requirements.txt` e `vercel.json` estão na raiz (ambos incluídos neste repositório).
+2. No painel da Vercel, importe o repositório do GitHub.
+3. Em **Settings → Environment Variables**, adicione:
+   - `SECRET_KEY`
+   - `SMTP_USER`
+   - `SMTP_PASSWORD`
+   - `EMAIL_TO` (opcional, padrão já é `innovaideia2023@gmail.com`)
+4. Deploy automático a cada push na branch `main`.
 
-· empresa.json – missão, visão, valores
-· indicadores.json – números (projetos, clientes, etc.)
-· servicos.json – lista de serviços (título, descrição, ícone)
-· projetos.json – portfólio com tags
-· tecnologias.json – stack técnica (nome, ícone)
-· depoimentos.json – depoimentos de clientes
-· faq.json – perguntas frequentes
+> O `vercel.json` deste repositório usa `@vercel/python` apontando para `app.py` — a versão anterior usava `@vercel/static` apontando para um `index.html` na raiz que não existe (o arquivo real fica em `templates/index.html`), o que fazia o build falhar antes mesmo de rodar o Flask.
 
-Dica: Para listas de objetos, use o formato JSONL (cada linha um objeto). O Flask carrega ambos os formatos.
+### Alternativa: Fly.io
 
-Estilos (CSS)
-
-Edite static/css/style.css. O arquivo está organizado com variáveis CSS (:root) para cores, fontes e espaçamentos. Altere as variáveis para modificar a identidade visual globalmente.
-
-JavaScript
-
-Os scripts estão em static/js/. O arquivo app.js contém a lógica de inicialização (navbar, scroll, animações). contact.js gerencia o envio do formulário de contato (com validação básica).
+Só faz sentido se o projeto passar a persistir dados (ex: salvar contatos em SQLite/Postgres). Nesse caso é necessário:
+- Criar o `Dockerfile` referenciado em `fly.toml` (ainda não existe no repositório).
+- Ajustar o `app.py` para de fato gravar em `DB_PATH`, hoje configurado no `fly.toml` mas não utilizado no código.
 
 ---
 
-🌐 Deploy (Produção)
+## 🛠 Personalização
 
-Para colocar o site no ar, recomenda-se:
+**Conteúdo:** edite os arquivos em `static/data/*.json` e reinicie o servidor (ou aguarde o redeploy). Não requer alteração de código:
+- `empresa.json` – missão, visão, valores
+- `indicadores.json` – números (projetos, clientes, etc.)
+- `servicos.json` – lista de serviços
+- `projetos.json` – portfólio
+- `tecnologias.json` – stack técnica
+- `depoimentos.json` – depoimentos de clientes
+- `faq.json` – perguntas frequentes
 
-1. Desativar o modo DEBUG – no .env, defina DEBUG=False.
-2. Usar um servidor WSGI (ex: Gunicorn) em vez do servidor embutido do Flask.
-3. Configurar um proxy reverso (Nginx, Apache) para servir arquivos estáticos e rotear requisições.
-4. Definir uma SECRET_KEY forte e única (nunca versionada).
-5. Servir os dados a partir de um local fora de static/ (por segurança).
+**Estilos:** `static/css/style.css`, organizado com variáveis CSS (`:root`) para cores, fontes e espaçamentos.
 
-Exemplo de comando com Gunicorn:
-
-```bash
-gunicorn -w 4 -b 0.0.0.0:8000 app:app
-```
-
----
-
-🤝 Contribuição
-
-Contribuições são bem-vindas! Para sugerir melhorias:
-
-1. Faça um fork do projeto.
-2. Crie uma branch para sua feature (git checkout -b feature/nova-feature).
-3. Commit suas alterações (git commit -m 'Adiciona nova feature').
-4. Push para a branch (git push origin feature/nova-feature).
-5. Abra um Pull Request.
+**JavaScript:** `static/js/app.js` (navbar, scroll, animações) e `static/js/contact.js` (validação do formulário).
 
 ---
 
-📄 Licença
+## 📞 Contato
 
-© 2026 InNovaIdeia Assessoria em Tecnologia. Todos os direitos reservados.
-
-Este projeto é de uso interno da empresa e não pode ser reproduzido ou distribuído sem autorização prévia.
-
----
-
-📞 Contato
-
-· Site: innovaideia.com.br
-· E-mail: innovaideia2023@gmail.com
-· WhatsApp: (16) 99311-7529
-· GitHub: github.com/Foxactive1
+- E-mail: innovaideia2023@gmail.com
+- GitHub: [github.com/Foxactive1](https://github.com/Foxactive1)
+- LinkedIn: Dione Castro Alves
 
 ---
 
-🧪 Scripts Úteis
+## 📄 Licença
 
-· Validar arquivos JSONL:
-    python scripts/validate_jsonl.py static/data/
-· Otimizar imagens:
-    python scripts/optimize_images.py assets/img/
-· Build de assets:
-    python scripts/build_assets.py
-
-```
-
----
-
-## Principais melhorias
-
-| Seção                 | Antes             | Depois                                                                 |
-|-----------------------|-------------------|------------------------------------------------------------------------|
-| **Tecnologias**       | Não listado       | Lista completa com versões                                             |
-| **Estrutura**         | Apenas 3 linhas   | Árvore detalhada com todos os diretórios                               |
-| **Instalação**        | Apenas 2 comandos | Passos com ambiente virtual, variáveis de ambiente, dicas de segurança |
-| **Personalização**    | "Edite os JSONs"  | Explicação de cada arquivo e formato (JSON vs JSONL)                   |
-| **Deploy**            | Ausente           | Orientações claras para produção                                       |
-| **Scripts auxiliares**| Não mencionados   | Listados na seção final                                                |
-| **Contato**           | Não existia       | Adicionado com todos os canais                                         |
+© 2026 InNovaIdeia Assessoria em Tecnologia. Todos os direitos reservados. Uso interno da empresa — não reproduzir ou distribuir sem autorização prévia.
