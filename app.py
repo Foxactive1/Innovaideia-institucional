@@ -220,6 +220,10 @@ def api_contato():
 def robots():
     return send_from_directory("static", "robots.txt", mimetype="text/plain")
 
+@app.route("/sitemap.xml")
+def sitemap():
+    return send_from_directory("static", "sitemap.xml", mimetype="application/xml")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
