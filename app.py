@@ -222,7 +222,11 @@ def robots():
 
 @app.route("/sitemap.xml")
 def sitemap():
-    return send_from_directory("static", "sitemap.xml", mimetype="application/xml")
+    return send_from_directory(
+        app.static_folder,
+        "sitemap.xml",
+        mimetype="application/xml"
+    )
 
 @app.errorhandler(404)
 def page_not_found(e):
