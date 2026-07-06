@@ -8,7 +8,7 @@ from email.mime.multipart import MIMEMultipart
 from threading import Thread
 from html import escape
 
-from flask import Flask, render_template, abort, jsonify, request
+from flask import Flask, render_template, abort, jsonify, request, send_from_directory
 
 # ── Configurações de e-mail (via variáveis de ambiente) ─
 SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
