@@ -215,6 +215,11 @@ def api_contato():
 
 # ── Tratamento de erros ──────────────────────────────────
 
+
+@app.route("/robots.txt")
+def robots():
+    return send_from_directory("static", "robots.txt", mimetype="text/plain")
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
