@@ -1,4 +1,4 @@
-# InNovaIdeia — Site Institucional
+# InNovaIdeia — Site Institucional ®
 
 Site institucional da **InNovaIdeia Assessoria em Tecnologia**, desenvolvido com **Flask** e arquitetura baseada em dados JSON para fácil manutenção e escalabilidade.
 
