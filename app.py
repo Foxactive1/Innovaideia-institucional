@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import secrets
 import smtplib
 import logging
 from email.mime.text import MIMEText
@@ -11,11 +12,11 @@ from html import escape
 from flask import Flask, render_template, abort, jsonify, request, send_from_directory
 
 # ── Configurações de e-mail (via variáveis de ambiente) ─
-SMTP_SERVER = os.getenv("SMTP_SERVER", "smtp.gmail.com")
-SMTP_PORT = int(os.getenv("SMTP_PORT", 587))
-SMTP_USER = os.getenv("SMTP_USER")          # obrigatório para enviar e-mail
-SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")  # obrigatório para enviar e-mail
-EMAIL_TO = os.getenv("EMAIL_TO", "innovaideia2023@gmail.com")
+SMTP_SERVER   = os.getenv("SMTP_SERVER", "smtp.gmail.com")
+SMTP_PORT     = int(os.getenv("SMTP_PORT", 587))
+SMTP_USER     = os.getenv("SMTP_USER")        # obrigatório para enviar e-mail
+SMTP_PASSWORD = os.getenv("SMTP_PASSWORD")    # obrigatório para enviar e-mail
+EMAIL_TO      = os.getenv("EMAIL_TO", "innovaideia2023@gmail.com")
 
 logging.basicConfig(
     level=logging.INFO,
@@ -25,7 +26,16 @@ logger = logging.getLogger(__name__)
 
 # Inicializa a aplicação
 app = Flask(__name__)
-app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-secret-key')
+
+# ── SECRET_KEY segura ────────────────────────────────────
+_secret = os.environ.get('SECRET_KEY')
+if not _secret:
+    _secret = secrets.token_hex(32)
+    logger.warning(
+        "SECRET_KEY não definida — gerada aleatoriamente. "
+        "Defina a variável de ambiente SECRET_KEY em produção."
+    )
+app.config['SECRET_KEY'] = _secret
 
 # Caminho da pasta de dados
 DATA_DIR = os.path.join(app.static_folder, 'data')
@@ -66,12 +76,12 @@ def load_data_or_404(filename, is_jsonl=False):
 # ── Carrega todos os dados ao iniciar (cache) ──────────
 
 INDICADORES = load_json('indicadores.json') or []
-SERVICOS = load_json('servicos.json') or []
+SERVICOS    = load_json('servicos.json')    or []
 TECNOLOGIAS = load_json('tecnologias.json') or []
-PROJETOS = load_json('projetos.json') or []
+PROJETOS    = load_json('projetos.json')    or []
 DEPOIMENTOS = load_json('depoimentos.json') or []
-FAQ = load_json('faq.json') or []
-EMPRESA = load_json('empresa.json') or {}
+FAQ         = load_json('faq.json')         or []
+EMPRESA     = load_json('empresa.json')     or {}
 
 # ── Funções auxiliares de e-mail (formulário de contato) ─
 
@@ -79,12 +89,13 @@ def validar_email(email: str) -> bool:
     """Valida o formato básico de um endereço de e-mail."""
     return re.match(r'^[^\s@]+@[^\s@]+\.[^\s@]+$', email) is not None
 
-def _enviar_email_smtp(nome: str, email: str, telefone: str,
-                        interesse: str, mensagem: str, newsletter: bool) -> bool:
+def _enviar_email_smtp(nome: str, email: str, empresa: str, telefone: str,
+                       interesse: str, mensagem: str, newsletter: bool) -> bool:
     """Conecta ao servidor SMTP e envia o e-mail de contato."""
     corpo = f"""
     <h2>Novo contato via site</h2>
     <p><strong>Nome:</strong> {escape(nome)}</p>
+    <p><strong>Empresa:</strong> {escape(empresa) or 'Não informado'}</p>
     <p><strong>E-mail:</strong> {escape(email)}</p>
     <p><strong>Telefone:</strong> {escape(telefone) or 'Não informado'}</p>
     <p><strong>Interesse:</strong> {escape(interesse)}</p>
@@ -93,8 +104,8 @@ def _enviar_email_smtp(nome: str, email: str, telefone: str,
     """
 
     msg = MIMEMultipart()
-    msg['From'] = SMTP_USER
-    msg['To'] = EMAIL_TO
+    msg['From']    = SMTP_USER
+    msg['To']      = EMAIL_TO
     msg['Subject'] = f"Novo contato - {interesse}"
     msg.attach(MIMEText(corpo, 'html'))
 
@@ -104,11 +115,11 @@ def _enviar_email_smtp(nome: str, email: str, telefone: str,
         server.send_message(msg)
     return True
 
-def enviar_email_async(app_obj, nome, email, telefone, interesse, mensagem, newsletter):
+def enviar_email_async(app_obj, nome, email, empresa, telefone, interesse, mensagem, newsletter):
     """Dispara o envio de e-mail em uma thread separada, com contexto da app."""
     with app_obj.app_context():
         try:
-            _enviar_email_smtp(nome, email, telefone, interesse, mensagem, newsletter)
+            _enviar_email_smtp(nome, email, empresa, telefone, interesse, mensagem, newsletter)
             logger.info(f"E-mail de contato enviado para {EMAIL_TO}")
         except Exception as e:
             logger.error(f"Falha no envio do e-mail: {str(e)}")
@@ -152,7 +163,7 @@ def contato():
     """Página de contato."""
     return render_template('contato.html')
 
-# ── Rotas para API (opcional) ──────────────────────────
+# ── Rotas para API ─────────────────────────────────────
 
 @app.route('/api/indicadores')
 def api_indicadores():
@@ -185,11 +196,12 @@ def api_contato():
     if not dados:
         return jsonify({'erro': 'Requisição deve conter JSON válido'}), 400
 
-    nome = dados.get('nome', '').strip()
-    email = dados.get('email', '').strip()
-    mensagem = dados.get('mensagem', '').strip()
-    interesse = dados.get('interesse', 'Consultoria').strip()
-    telefone = dados.get('telefone', '').strip()
+    nome       = dados.get('nome', '').strip()
+    email      = dados.get('email', '').strip()
+    mensagem   = dados.get('mensagem', '').strip()
+    interesse  = dados.get('interesse', 'Consultoria').strip()
+    telefone   = dados.get('telefone', '').strip()
+    empresa    = dados.get('empresa', '').strip()
     newsletter = bool(dados.get('newsletter', False))
 
     erros = []
@@ -206,15 +218,14 @@ def api_contato():
     if SMTP_USER and SMTP_PASSWORD:
         Thread(
             target=enviar_email_async,
-            args=(app, nome, email, telefone, interesse, mensagem, newsletter)
+            args=(app, nome, email, empresa, telefone, interesse, mensagem, newsletter)
         ).start()
     else:
         logger.warning("Credenciais SMTP não configuradas – e-mail não enviado.")
 
     return jsonify({'mensagem': 'Contato registrado com sucesso!'}), 201
 
-# ── Tratamento de erros ──────────────────────────────────
-
+# ── Arquivos estáticos de SEO ────────────────────────────
 
 @app.route("/robots.txt")
 def robots():
@@ -228,6 +239,8 @@ def sitemap():
         mimetype="application/xml"
     )
 
+# ── Tratamento de erros ──────────────────────────────────
+
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
@@ -239,5 +252,4 @@ def internal_server_error(e):
 # ── Inicialização ────────────────────────────────────────
 
 if __name__ == '__main__':
-    # Em desenvolvimento, ativa o debug e recarrega automático
     app.run(debug=True, host='0.0.0.0', port=5000)
