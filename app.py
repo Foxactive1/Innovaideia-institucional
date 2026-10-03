@@ -160,6 +160,16 @@ def api_contato():
     telefone = str(dados.get("telefone", "")).strip()
     empresa = str(dados.get("empresa", "")).strip()
     newsletter = bool(dados.get("newsletter", False))
+    website = str(dados.get("website", "")).strip()
+
+    # Honeypot anti-bot: usuários reais não veem nem preenchem este campo.
+    # Retornamos sucesso genérico para não revelar a regra de proteção.
+    if website:
+        logger.warning("Submissão bloqueada pelo honeypot no formulário de contato.")
+        return jsonify({
+            "mensagem": "Contato registrado e enviado com sucesso!",
+            "status": "sent",
+        }), 201
 
     erros = []
     if len(nome) < 2:
