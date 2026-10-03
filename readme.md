@@ -10,6 +10,7 @@ Site institucional da **InNovaIdeia Assessoria em Tecnologia**, desenvolvido com
 - **Frontend:** Bootstrap 5, CSS customizado (variáveis, grid, animações), JavaScript nativo
 - **Dados:** JSON (arquivos estáticos em `static/data/`)
 - **E-mail:** Resend API (`resend` SDK), com envio do lead e confirmação automática ao visitante
+- **Proteção anti-abuso:** Flask-Limiter no endpoint de contato
 - **Deploy:** Vercel (runtime Python serverless)
 
 ---
@@ -131,7 +132,10 @@ Este projeto atualmente é stateless para persistência de negócio (sem banco d
    - `RESEND_API_KEY`
    - `EMAIL_FROM` (opcional; use um remetente autorizado no Resend)
    - `EMAIL_TO` (opcional; padrão: `innovaideia2023@gmail.com`)
+   - `RATELIMIT_STORAGE_URI` (opcional; padrão: `memory://`)
 4. Deploy automático a cada push na branch `main`.
+
+O endpoint `POST /api/contato` aceita no máximo **5 requisições por minuto por origem**, reduzindo abuso e spam. Sem `RATELIMIT_STORAGE_URI`, o controle usa memória local da instância; em ambientes serverless isso funciona como uma primeira camada de proteção, mas não é um contador global entre todas as instâncias.
 
 > O `vercel.json` deste repositório usa `@vercel/python` apontando para `app.py` — a versão anterior usava `@vercel/static` apontando para um `index.html` na raiz que não existe (o arquivo real fica em `templates/index.html`), o que fazia o build falhar antes mesmo de rodar o Flask.
 
