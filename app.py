@@ -5,6 +5,8 @@ import secrets
 import logging
 
 from flask import Flask, render_template, abort, jsonify, request, send_from_directory
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from services.resend_service import enviar_lead
 
@@ -22,6 +24,13 @@ if not _secret:
     _secret = secrets.token_hex(32)
     logger.warning("SECRET_KEY não definida — gerada aleatoriamente.")
 app.config["SECRET_KEY"] = _secret
+
+limiter = Limiter(
+    key_func=get_remote_address,
+    app=app,
+    storage_uri=os.environ.get("RATELIMIT_STORAGE_URI", "memory://"),
+    default_limits=[],
+)
 
 DATA_DIR = os.path.join(app.static_folder, "data")
 
@@ -137,6 +146,7 @@ def api_faq():
 
 
 @app.route("/api/contato", methods=["POST"])
+@limiter.limit("5 per minute")
 def api_contato():
     """Recebe um lead e envia as notificações usando a API do Resend."""
     dados = request.get_json(silent=True)
@@ -196,6 +206,13 @@ def sitemap():
         "sitemap.xml",
         mimetype="application/xml",
     )
+
+
+@app.errorhandler(429)
+def rate_limit_exceeded(e):
+    return jsonify({
+        "erro": "Muitas tentativas em pouco tempo. Aguarde um momento e tente novamente."
+    }), 429
 
 
 @app.errorhandler(404)
