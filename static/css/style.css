@@ -947,3 +947,15 @@ body {
 .inv-error-section .inv-hero-btns {
     justify-content: center;
 }
+
+
+/* ── Honeypot anti-spam ───────────────────────────────────── */
+.inv-honeypot {
+    position: absolute !important;
+    left: -9999px !important;
+    width: 1px !important;
+    height: 1px !important;
+    overflow: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+}
