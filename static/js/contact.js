@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const interesse = document.getElementById('invServico')?.value.trim() || 'Consultoria';
             const mensagem  = document.getElementById('invMensagem').value.trim();
             const newsletter = document.getElementById('invNewsletter')?.checked || false;
+            const website    = document.getElementById('invWebsite')?.value.trim() || '';
 
             // ── Validação client-side ─────────────────────
             if (!nome || !email || !telefone || !mensagem) {
@@ -70,7 +71,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const response = await fetch('/api/contato', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ nome, empresa, email, telefone, interesse, mensagem, newsletter })
+                    body: JSON.stringify({ nome, empresa, email, telefone, interesse, mensagem, newsletter, website })
                 });
 
                 const data = await response.json();
