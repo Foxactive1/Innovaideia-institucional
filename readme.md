@@ -9,7 +9,7 @@ Site institucional da **InNovaIdeia Assessoria em Tecnologia**, desenvolvido com
 - **Backend:** Flask 3.x (Python 3.9+)
 - **Frontend:** Bootstrap 5, CSS customizado (variáveis, grid, animações), JavaScript nativo
 - **Dados:** JSON (arquivos estáticos em `static/data/`)
-- **E-mail:** SMTP (formulário de contato assíncrono via `threading`)
+- **E-mail:** Resend API (`resend` SDK), com envio do lead e confirmação automática ao visitante
 - **Deploy:** Vercel (runtime Python serverless)
 
 ---
@@ -21,7 +21,9 @@ innovaideia-institucional/
 ├── app.py                      # Servidor Flask (rotas, API, envio de e-mail)
 ├── requirements.txt            # Dependências Python
 ├── vercel.json                 # Configuração de deploy na Vercel
-├── README.md                   # Este arquivo
+├── services/
+│   └── resend_service.py       # Integração com Resend para leads e confirmações
+├── readme.md                   # Documentação do projeto
 │
 ├── templates/                  # Páginas Jinja2 (nome em minúsculas — obrigatório no Linux)
 │   ├── base.html
@@ -103,11 +105,11 @@ innovaideia-institucional/
 4. Configure as variáveis de ambiente (formulário de contato):
    ```bash
    export SECRET_KEY="chave-secreta-aleatoria"
-   export SMTP_USER="seu-email@gmail.com"
-   export SMTP_PASSWORD="senha-de-app-do-gmail"
+   export RESEND_API_KEY="re_xxxxxxxxx"
+   export EMAIL_FROM="InNovaIdeia <contato@seudominio.com>"
    export EMAIL_TO="innovaideia2023@gmail.com"
    ```
-   Sem `SMTP_USER`/`SMTP_PASSWORD`, o formulário continua validando e respondendo 201, mas o e-mail não é enviado (fica só no log).
+   `RESEND_API_KEY` é obrigatória para o envio. `EMAIL_FROM` é opcional e deve usar um remetente/domínio autorizado no Resend. `EMAIL_TO` é opcional e, se omitida, usa `innovaideia2023@gmail.com`.
 
 5. Execute o servidor:
    ```bash
@@ -120,15 +122,15 @@ innovaideia-institucional/
 
 ## 🌐 Deploy na Vercel (recomendado)
 
-Este projeto é stateless (sem banco de dados) — a Vercel com runtime Python serverless é a opção mais simples:
+Este projeto atualmente é stateless para persistência de negócio (sem banco de dados). O formulário envia os contatos pela API do Resend, e a Vercel com runtime Python serverless continua sendo uma opção simples para o deploy:
 
 1. Garanta que `requirements.txt` e `vercel.json` estão na raiz (ambos incluídos neste repositório).
 2. No painel da Vercel, importe o repositório do GitHub.
 3. Em **Settings → Environment Variables**, adicione:
    - `SECRET_KEY`
-   - `SMTP_USER`
-   - `SMTP_PASSWORD`
-   - `EMAIL_TO` (opcional, padrão já é `innovaideia2023@gmail.com`)
+   - `RESEND_API_KEY`
+   - `EMAIL_FROM` (opcional; use um remetente autorizado no Resend)
+   - `EMAIL_TO` (opcional; padrão: `innovaideia2023@gmail.com`)
 4. Deploy automático a cada push na branch `main`.
 
 > O `vercel.json` deste repositório usa `@vercel/python` apontando para `app.py` — a versão anterior usava `@vercel/static` apontando para um `index.html` na raiz que não existe (o arquivo real fica em `templates/index.html`), o que fazia o build falhar antes mesmo de rodar o Flask.
