@@ -1,6 +1,17 @@
 <div class="row g-4">
     <div class="col-lg-7">
         <form class="inv-form" id="invContactForm" novalidate>
+            <div class="inv-honeypot" aria-hidden="true">
+                <label for="invWebsite">Website</label>
+                <input
+                    type="text"
+                    id="invWebsite"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
+                    inputmode="none"
+                >
+            </div>
             <div class="row g-3">
                 <div class="col-md-6">
                     <label for="invNome" class="form-label">Nome *</label>
