@@ -2,6 +2,7 @@ import os
 from html import escape
 
 import resend
+import re
 
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
@@ -12,14 +13,32 @@ if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
 
+def _valid_sender(value: str) -> bool:
+    value = (value or "").strip()
+    if not value:
+        return False
+
+    match = re.search(r"<([^<>\s]+@[^<>\s]+\.[^<>\s]+)>$", value)
+    if match:
+        return True
+
+    return re.fullmatch(r"[^\s@]+@[^\s@]+\.[^\s@]+", value) is not None
+
+
 def email_config_status():
     """Retorna apenas metadados seguros da configuração de e-mail."""
+    sender_valid = _valid_sender(EMAIL_FROM)
+    is_test_sender = "onboarding@resend.dev" in (EMAIL_FROM or "").lower()
+
     return {
         "provider": "resend",
         "api_key_configured": bool(RESEND_API_KEY),
         "email_from": EMAIL_FROM,
+        "email_from_valid": sender_valid,
         "lead_email": LEAD_EMAIL,
-        "production_sender_ready": "onboarding@resend.dev" not in EMAIL_FROM.lower(),
+        "production_sender_ready": bool(
+            RESEND_API_KEY and sender_valid and not is_test_sender
+        ),
     }
 
 
@@ -64,6 +83,11 @@ def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=
     """
     if not RESEND_API_KEY:
         raise RuntimeError("RESEND_API_KEY não configurada.")
+    if not _valid_sender(EMAIL_FROM):
+        raise RuntimeError(
+            "EMAIL_FROM inválido. Use um endereço como "
+            "'InNovaIdeia <onboarding@resend.dev>' ou um remetente de domínio verificado."
+        )
 
     lead = resend.Emails.send({
         "from": EMAIL_FROM,
