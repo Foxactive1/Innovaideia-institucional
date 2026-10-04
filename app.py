@@ -193,6 +193,8 @@ def api_contato():
             newsletter=newsletter,
         )
         logger.info("Lead enviado pelo Resend: %s", resultado.get("lead"))
+        if resultado.get("confirmation_error"):
+            logger.warning("Lead recebido, mas confirmação ao visitante falhou: %s", resultado.get("confirmation_error"))
         return jsonify({
             "mensagem": "Contato registrado e enviado com sucesso!",
             "status": "sent",
