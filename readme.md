@@ -108,9 +108,8 @@ innovaideia-institucional/
    export SECRET_KEY="chave-secreta-aleatoria"
    export RESEND_API_KEY="re_xxxxxxxxx"
    export EMAIL_FROM="InNovaIdeia <contato@seudominio.com>"
-   export EMAIL_TO="innovaideia2023@gmail.com"
    ```
-   `RESEND_API_KEY` é obrigatória para o envio. `EMAIL_FROM` é opcional e deve usar um remetente/domínio autorizado no Resend. `EMAIL_TO` é opcional e, se omitida, usa `innovaideia2023@gmail.com`.
+   `RESEND_API_KEY` é obrigatória para o envio. `EMAIL_FROM` é opcional e deve usar um remetente/domínio autorizado no Resend. Todos os leads do formulário são enviados para `innovaideia2023@gmail.com`.
 
 5. Execute o servidor:
    ```bash
@@ -131,7 +130,6 @@ Este projeto atualmente é stateless para persistência de negócio (sem banco d
    - `SECRET_KEY`
    - `RESEND_API_KEY`
    - `EMAIL_FROM` (opcional; use um remetente autorizado no Resend)
-   - `EMAIL_TO` (opcional; padrão: `innovaideia2023@gmail.com`)
    - `RATELIMIT_STORAGE_URI` (opcional; padrão: `memory://`)
 4. Deploy automático a cada push na branch `main`.
 
