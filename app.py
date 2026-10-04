@@ -8,7 +8,7 @@ from flask import Flask, render_template, abort, jsonify, request, send_from_dir
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from services.resend_service import enviar_lead
+from services.resend_service import enviar_lead, email_config_status
 
 
 logging.basicConfig(
@@ -153,6 +153,12 @@ def api_health():
         "status": "ok",
         "service": "innovaideia-institucional",
     }), 200
+
+
+@app.route("/api/email-health")
+@limiter.exempt
+def api_email_health():
+    return jsonify(email_config_status()), 200
 
 
 @app.route("/api/contato", methods=["POST"])
