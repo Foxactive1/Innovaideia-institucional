@@ -12,6 +12,17 @@ if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
 
 
+def email_config_status():
+    """Retorna apenas metadados seguros da configuração de e-mail."""
+    return {
+        "provider": "resend",
+        "api_key_configured": bool(RESEND_API_KEY),
+        "email_from": EMAIL_FROM,
+        "lead_email": LEAD_EMAIL,
+        "production_sender_ready": "onboarding@resend.dev" not in EMAIL_FROM.lower(),
+    }
+
+
 def _email_html(nome, email, empresa, telefone, interesse, mensagem, newsletter):
     return f"""
     <div style="font-family:Arial,sans-serif;max-width:680px;margin:auto;color:#222">
