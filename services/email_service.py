@@ -1,27 +1,42 @@
+import base64
+import json
 import os
-import smtplib
+import urllib.error
+import urllib.parse
+import urllib.request
 from email.message import EmailMessage
 from html import escape
 
 
-SMTP_HOST = os.getenv("SMTP_HOST", "smtp.gmail.com").strip()
-SMTP_PORT = int(os.getenv("SMTP_PORT", "465"))
-SMTP_EMAIL = os.getenv("SMTP_EMAIL", "innovaideia2023@gmail.com").strip()
-SMTP_APP_PASSWORD = os.getenv("SMTP_APP_PASSWORD", "").replace(" ", "").strip()
+GMAIL_CLIENT_ID = os.getenv("GMAIL_CLIENT_ID", "").strip()
+GMAIL_CLIENT_SECRET = os.getenv("GMAIL_CLIENT_SECRET", "").strip()
+GMAIL_REFRESH_TOKEN = os.getenv("GMAIL_REFRESH_TOKEN", "").strip()
+GMAIL_SENDER = os.getenv(
+    "GMAIL_SENDER", "innovaideia2023@gmail.com"
+).strip()
 LEAD_EMAIL = "innovaideia2023@gmail.com"
+
+GOOGLE_TOKEN_URL = "https://oauth2.googleapis.com/token"
+GMAIL_SEND_URL = "https://gmail.googleapis.com/gmail/v1/users/me/messages/send"
 
 
 def email_config_status():
     """Retorna apenas metadados seguros da configuração de e-mail."""
+    ready = bool(
+        GMAIL_CLIENT_ID
+        and GMAIL_CLIENT_SECRET
+        and GMAIL_REFRESH_TOKEN
+        and GMAIL_SENDER
+    )
     return {
-        "provider": "gmail_smtp",
-        "config_version": "2026-10-04-gmail-v1",
-        "smtp_host": SMTP_HOST,
-        "smtp_port": SMTP_PORT,
-        "smtp_email": SMTP_EMAIL,
-        "app_password_configured": bool(SMTP_APP_PASSWORD),
+        "provider": "gmail_api_oauth2",
+        "config_version": "2026-10-04-gmail-api-v1",
+        "client_id_configured": bool(GMAIL_CLIENT_ID),
+        "client_secret_configured": bool(GMAIL_CLIENT_SECRET),
+        "refresh_token_configured": bool(GMAIL_REFRESH_TOKEN),
+        "gmail_sender": GMAIL_SENDER,
         "lead_email": LEAD_EMAIL,
-        "production_sender_ready": bool(SMTP_EMAIL and SMTP_APP_PASSWORD),
+        "production_sender_ready": ready,
     }
 
 
@@ -58,31 +73,115 @@ def _confirmation_html(nome):
     """
 
 
-def _send_email(to_email, subject, html, reply_to=None):
-    if not SMTP_EMAIL:
-        raise RuntimeError("SMTP_EMAIL não configurado.")
-    if not SMTP_APP_PASSWORD:
-        raise RuntimeError("SMTP_APP_PASSWORD não configurado.")
+def _require_config():
+    missing = []
+    if not GMAIL_CLIENT_ID:
+        missing.append("GMAIL_CLIENT_ID")
+    if not GMAIL_CLIENT_SECRET:
+        missing.append("GMAIL_CLIENT_SECRET")
+    if not GMAIL_REFRESH_TOKEN:
+        missing.append("GMAIL_REFRESH_TOKEN")
+    if not GMAIL_SENDER:
+        missing.append("GMAIL_SENDER")
 
-    msg = EmailMessage()
-    msg["From"] = f"InNovaIdeia <{SMTP_EMAIL}>"
-    msg["To"] = to_email
-    msg["Subject"] = subject
+    if missing:
+        raise RuntimeError(
+            "Configuração Gmail OAuth ausente: " + ", ".join(missing)
+        )
+
+
+def _get_access_token():
+    _require_config()
+
+    payload = urllib.parse.urlencode({
+        "client_id": GMAIL_CLIENT_ID,
+        "client_secret": GMAIL_CLIENT_SECRET,
+        "refresh_token": GMAIL_REFRESH_TOKEN,
+        "grant_type": "refresh_token",
+    }).encode("utf-8")
+
+    request = urllib.request.Request(
+        GOOGLE_TOKEN_URL,
+        data=payload,
+        headers={
+            "Content-Type": "application/x-www-form-urlencoded",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            data = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"Falha ao renovar token OAuth ({exc.code}): {detail}"
+        ) from exc
+
+    access_token = data.get("access_token")
+    if not access_token:
+        raise RuntimeError("Google OAuth não retornou access_token.")
+
+    return access_token
+
+
+def _build_raw_message(to_email, subject, html, reply_to=None):
+    message = EmailMessage()
+    message["From"] = f"InNovaIdeia <{GMAIL_SENDER}>"
+    message["To"] = to_email
+    message["Subject"] = subject
     if reply_to:
-        msg["Reply-To"] = reply_to
+        message["Reply-To"] = reply_to
 
-    msg.set_content("Este e-mail contém conteúdo HTML. Abra em um cliente compatível.")
-    msg.add_alternative(html, subtype="html")
+    message.set_content(
+        "Este e-mail contém conteúdo HTML. Abra em um cliente compatível."
+    )
+    message.add_alternative(html, subtype="html")
 
-    with smtplib.SMTP_SSL(SMTP_HOST, SMTP_PORT, timeout=20) as smtp:
-        smtp.login(SMTP_EMAIL, SMTP_APP_PASSWORD)
-        smtp.send_message(msg)
+    return base64.urlsafe_b64encode(message.as_bytes()).decode("ascii")
 
-    return {"status": "sent", "to": to_email}
+
+def _send_email(to_email, subject, html, reply_to=None):
+    token = _get_access_token()
+    raw_message = _build_raw_message(
+        to_email=to_email,
+        subject=subject,
+        html=html,
+        reply_to=reply_to,
+    )
+
+    body = json.dumps({"raw": raw_message}).encode("utf-8")
+    request = urllib.request.Request(
+        GMAIL_SEND_URL,
+        data=body,
+        headers={
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            "Accept": "application/json",
+        },
+        method="POST",
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            result = json.loads(response.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        detail = exc.read().decode("utf-8", errors="replace")
+        raise RuntimeError(
+            f"Gmail API recusou o envio ({exc.code}): {detail}"
+        ) from exc
+
+    return {
+        "status": "sent",
+        "to": to_email,
+        "message_id": result.get("id"),
+        "thread_id": result.get("threadId"),
+    }
 
 
 def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=False):
-    """Envia o lead ao Gmail da InNovaIdeia e tenta confirmar ao visitante."""
+    """Envia o lead via Gmail API e tenta confirmar o recebimento ao visitante."""
     lead = _send_email(
         to_email=LEAD_EMAIL,
         subject=f"Novo lead — {interesse} — {nome}",
