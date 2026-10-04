@@ -77,6 +77,24 @@ def validar_email(email: str) -> bool:
     return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email) is not None
 
 
+def _resend_error_hint(exc: Exception) -> str:
+    """Classifica erros comuns do provedor sem expor credenciais."""
+    msg = str(exc).lower()
+
+    if "domain" in msg and ("verify" in msg or "verified" in msg):
+        return "sender_domain_not_verified"
+    if "from" in msg and ("invalid" in msg or "validation" in msg):
+        return "invalid_sender"
+    if "api key" in msg or "unauthorized" in msg or "authentication" in msg:
+        return "invalid_api_key"
+    if "rate" in msg and "limit" in msg:
+        return "provider_rate_limit"
+    if "permission" in msg or "restricted" in msg:
+        return "provider_permission_denied"
+
+    return "provider_error"
+
+
 @app.route("/")
 def index():
     return render_template(
@@ -228,9 +246,15 @@ def api_contato():
             "status": "sent",
         }), 201
     except Exception as exc:
-        logger.exception("Falha ao enviar lead pelo Resend")
+        error_hint = _resend_error_hint(exc)
+        logger.exception(
+            "Falha ao enviar lead pelo Resend [%s]: %s",
+            error_hint,
+            exc,
+        )
         return jsonify({
-            "erro": "Não foi possível enviar sua mensagem agora. Tente novamente em instantes."
+            "erro": "Não foi possível enviar sua mensagem agora. Tente novamente em instantes.",
+            "codigo": error_hint,
         }), 502
 
 
