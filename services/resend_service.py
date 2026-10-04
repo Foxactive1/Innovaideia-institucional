@@ -6,7 +6,7 @@ import re
 
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
-EMAIL_FROM = os.getenv("EMAIL_FROM", "InNovaIdeia <onboarding@resend.dev>")
+EMAIL_FROM = os.getenv("EMAIL_FROM", "onboarding@resend.dev").strip()
 LEAD_EMAIL = "innovaideia2023@gmail.com"
 
 if RESEND_API_KEY:
@@ -32,8 +32,11 @@ def email_config_status():
 
     return {
         "provider": "resend",
+        "config_version": "2026-10-04-email-v2",
         "api_key_configured": bool(RESEND_API_KEY),
         "email_from": EMAIL_FROM,
+        "email_from_repr": repr(EMAIL_FROM),
+        "email_from_length": len(EMAIL_FROM or ""),
         "email_from_valid": sender_valid,
         "lead_email": LEAD_EMAIL,
         "production_sender_ready": bool(
@@ -85,8 +88,8 @@ def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=
         raise RuntimeError("RESEND_API_KEY não configurada.")
     if not _valid_sender(EMAIL_FROM):
         raise RuntimeError(
-            "EMAIL_FROM inválido. Use um endereço como "
-            "'InNovaIdeia <onboarding@resend.dev>' ou um remetente de domínio verificado."
+            "EMAIL_FROM inválido. Use 'onboarding@resend.dev' para teste "
+            "ou um endereço de domínio verificado em produção."
         )
 
     lead = resend.Emails.send({
