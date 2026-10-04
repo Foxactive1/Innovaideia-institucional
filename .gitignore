@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Ambientes virtuais
+.venv/
+venv/
+env/
+
+# Variaveis locais / segredos
+.env
+.env.*
+!.env.example
+
+# IDE / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Build / cobertura
+htmlcov/
+.coverage
+dist/
+build/
