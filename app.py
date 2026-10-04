@@ -8,7 +8,7 @@ from flask import Flask, render_template, abort, jsonify, request, send_from_dir
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
-from services.resend_service import enviar_lead, email_config_status
+from services.email_service import enviar_lead, email_config_status
 
 
 logging.basicConfig(
@@ -77,22 +77,24 @@ def validar_email(email: str) -> bool:
     return re.match(r"^[^\s@]+@[^\s@]+\.[^\s@]+$", email) is not None
 
 
-def _resend_error_hint(exc: Exception) -> str:
+def _email_error_hint(exc: Exception) -> str:
     """Classifica erros comuns do provedor sem expor credenciais."""
     msg = str(exc).lower()
 
-    if "domain" in msg and ("verify" in msg or "verified" in msg):
-        return "sender_domain_not_verified"
-    if "from" in msg and ("invalid" in msg or "validation" in msg):
-        return "invalid_sender"
-    if "api key" in msg or "unauthorized" in msg or "authentication" in msg:
-        return "invalid_api_key"
-    if "rate" in msg and "limit" in msg:
-        return "provider_rate_limit"
-    if "permission" in msg or "restricted" in msg:
-        return "provider_permission_denied"
+    if "smtp_app_password" in msg or "password not configured" in msg:
+        return "smtp_app_password_missing"
+    if "smtp_email" in msg:
+        return "smtp_email_missing"
+    if "username and password not accepted" in msg or "authentication failed" in msg:
+        return "smtp_authentication_failed"
+    if "application-specific password required" in msg or "app password" in msg:
+        return "smtp_app_password_required"
+    if "timed out" in msg or "timeout" in msg:
+        return "smtp_timeout"
+    if "name or service not known" in msg or "getaddrinfo failed" in msg:
+        return "smtp_dns_error"
 
-    return "provider_error"
+    return "smtp_error"
 
 
 @app.route("/")
@@ -238,7 +240,7 @@ def api_contato():
             mensagem=mensagem,
             newsletter=newsletter,
         )
-        logger.info("Lead enviado pelo Resend: %s", resultado.get("lead"))
+        logger.info("Lead enviado por e-mail: %s", resultado.get("lead"))
         if resultado.get("confirmation_error"):
             logger.warning("Lead recebido, mas confirmação ao visitante falhou: %s", resultado.get("confirmation_error"))
         return jsonify({
@@ -246,9 +248,9 @@ def api_contato():
             "status": "sent",
         }), 201
     except Exception as exc:
-        error_hint = _resend_error_hint(exc)
+        error_hint = _email_error_hint(exc)
         logger.exception(
-            "Falha ao enviar lead pelo Resend [%s]: %s",
+            "Falha ao enviar lead por e-mail [%s]: %s",
             error_hint,
             exc,
         )
