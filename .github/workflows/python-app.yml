@@ -37,4 +37,4 @@ jobs:
           SECRET_KEY: ci-test-secret
           RESEND_API_KEY: ci-placeholder
         run: |
-          pytest tests/ -q
+          python -m pytest tests/ -q
