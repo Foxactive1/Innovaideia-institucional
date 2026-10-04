@@ -46,7 +46,11 @@ def _confirmation_html(nome):
 
 
 def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=False):
-    """Envia o lead para a InNovaIdeia e uma confirmação para o visitante."""
+    """Envia o lead para a InNovaIdeia e tenta confirmar o recebimento ao visitante.
+
+    O envio principal do lead é obrigatório. A confirmação ao visitante é best-effort:
+    se ela falhar, o contato continua sendo considerado recebido.
+    """
     if not RESEND_API_KEY:
         raise RuntimeError("RESEND_API_KEY não configurada.")
 
@@ -58,11 +62,21 @@ def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=
         "html": _email_html(nome, email, empresa, telefone, interesse, mensagem, newsletter),
     })
 
-    confirmation = resend.Emails.send({
-        "from": EMAIL_FROM,
-        "to": [email],
-        "subject": "Recebemos seu contato — InNovaIdeia",
-        "html": _confirmation_html(nome),
-    })
+    confirmation = None
+    confirmation_error = None
 
-    return {"lead": lead, "confirmation": confirmation}
+    try:
+        confirmation = resend.Emails.send({
+            "from": EMAIL_FROM,
+            "to": [email],
+            "subject": "Recebemos seu contato — InNovaIdeia",
+            "html": _confirmation_html(nome),
+        })
+    except Exception as exc:
+        confirmation_error = str(exc)
+
+    return {
+        "lead": lead,
+        "confirmation": confirmation,
+        "confirmation_error": confirmation_error,
+    }
