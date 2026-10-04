@@ -220,3 +220,26 @@ SMTP_PORT=465
 Os leads são enviados para `innovaideia2023@gmail.com`.
 
 > Não use a senha normal da conta Google. Use uma senha de app e mantenha-a apenas nas variáveis de ambiente da Vercel.
+
+
+## Gmail API com OAuth 2.0
+
+O envio do formulário usa HTTPS via Gmail API, adequado para deploy serverless na Vercel.
+
+Variáveis de ambiente necessárias:
+
+```text
+GMAIL_CLIENT_ID=...
+GMAIL_CLIENT_SECRET=...
+GMAIL_REFRESH_TOKEN=...
+GMAIL_SENDER=innovaideia2023@gmail.com
+```
+
+Escopo recomendado:
+
+```text
+https://www.googleapis.com/auth/gmail.send
+```
+
+O refresh token é usado pelo backend para obter access tokens temporários e chamar
+`users.messages.send` na Gmail API.
