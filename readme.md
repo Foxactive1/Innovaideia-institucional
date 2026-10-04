@@ -114,11 +114,8 @@ innovaideia-institucional/
 5. Configure as variáveis de ambiente (formulário de contato):
    ```bash
    export SECRET_KEY="chave-secreta-aleatoria"
-   export RESEND_API_KEY="re_xxxxxxxxx"
-   export EMAIL_FROM="InNovaIdeia <contato@seudominio.com>"
-   ```
-   `RESEND_API_KEY` é obrigatória para o envio. `EMAIL_FROM` é opcional e deve usar um remetente/domínio autorizado no Resend. Todos os leads do formulário são enviados para `innovaideia2023@gmail.com`.
-
+   export    export    ```
+   `
 6. Execute o servidor:
    ```bash
    python app.py
@@ -136,9 +133,7 @@ Este projeto atualmente é stateless para persistência de negócio (sem banco d
 2. No painel da Vercel, importe o repositório do GitHub.
 3. Em **Settings → Environment Variables**, adicione:
    - `SECRET_KEY`
-   - `RESEND_API_KEY`
-   - `EMAIL_FROM` (opcional; use um remetente autorizado no Resend)
-   - `RATELIMIT_STORAGE_URI` (opcional; padrão: `memory://`)
+   - `   - `   - `RATELIMIT_STORAGE_URI` (opcional; padrão: `memory://`)
 4. Deploy automático a cada push na branch `main`.
 
 O endpoint `POST /api/contato` aceita no máximo **5 requisições por minuto por origem**, reduzindo abuso e spam. O formulário também possui um **honeypot anti-bot**: visitantes reais não veem o campo, enquanto submissões automatizadas que o preenchem são descartadas sem disparar e-mails. Sem `RATELIMIT_STORAGE_URI`, o controle usa memória local da instância; em ambientes serverless isso funciona como uma primeira camada de proteção, mas não é um contador global entre todas as instâncias.
@@ -190,9 +185,7 @@ Só faz sentido se o projeto passar a persistir dados (ex: salvar contatos em SQ
 Antes de publicar:
 
 - Configure `SECRET_KEY` com valor forte e exclusivo.
-- Configure `RESEND_API_KEY`.
-- Configure `EMAIL_FROM` com remetente autorizado no Resend.
-- Confirme que os leads chegam em `innovaideia2023@gmail.com`.
+- Configure `- Configure `- Confirme que os leads chegam em `innovaideia2023@gmail.com`.
 - Verifique `GET /api/health` após o deploy.
 - Confirme que o GitHub Actions está verde.
 - Mantenha `FLASK_DEBUG=false` em produção.
@@ -209,3 +202,21 @@ Resposta esperada:
 ```json
 {"service":"innovaideia-institucional","status":"ok"}
 ```
+
+
+## Gmail SMTP para o formulário
+
+O formulário de contato usa Gmail SMTP com senha de app.
+
+Variáveis obrigatórias na Vercel:
+
+```text
+SMTP_EMAIL=innovaideia2023@gmail.com
+SMTP_APP_PASSWORD=<senha-de-app-do-Google>
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=465
+```
+
+Os leads são enviados para `innovaideia2023@gmail.com`.
+
+> Não use a senha normal da conta Google. Use uma senha de app e mantenha-a apenas nas variáveis de ambiente da Vercel.
