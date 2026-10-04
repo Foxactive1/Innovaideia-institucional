@@ -11,6 +11,8 @@ Site institucional da **InNovaIdeia Assessoria em Tecnologia**, desenvolvido com
 - **Dados:** JSON (arquivos estáticos em `static/data/`)
 - **E-mail:** Resend API (`resend` SDK), com envio do lead e confirmação automática ao visitante
 - **Proteção anti-abuso:** Flask-Limiter no endpoint de contato + honeypot anti-bot invisível
+- **Healthcheck:** `GET /api/health`
+- **CI:** GitHub Actions com lint crítico e testes isolados do Resend
 - **Deploy:** Vercel (runtime Python serverless)
 
 ---
@@ -103,7 +105,13 @@ innovaideia-institucional/
    pip install -r requirements.txt
    ```
 
-4. Configure as variáveis de ambiente (formulário de contato):
+4. Copie o arquivo de ambiente de exemplo:
+   ```bash
+   cp .env.example .env
+   ```
+   > O Flask não carrega `.env` automaticamente neste projeto; use essas chaves no shell local ou configure-as diretamente na plataforma de deploy.
+
+5. Configure as variáveis de ambiente (formulário de contato):
    ```bash
    export SECRET_KEY="chave-secreta-aleatoria"
    export RESEND_API_KEY="re_xxxxxxxxx"
@@ -111,12 +119,12 @@ innovaideia-institucional/
    ```
    `RESEND_API_KEY` é obrigatória para o envio. `EMAIL_FROM` é opcional e deve usar um remetente/domínio autorizado no Resend. Todos os leads do formulário são enviados para `innovaideia2023@gmail.com`.
 
-5. Execute o servidor:
+6. Execute o servidor:
    ```bash
    python app.py
    ```
 
-6. Acesse `http://localhost:5000`.
+7. Acesse `http://localhost:5000`.
 
 ---
 
@@ -173,3 +181,31 @@ Só faz sentido se o projeto passar a persistir dados (ex: salvar contatos em SQ
 ## 📄 Licença
 
 © 2026 InNovaIdeia Assessoria em Tecnologia. Todos os direitos reservados. Uso interno da empresa — não reproduzir ou distribuir sem autorização prévia.
+
+
+---
+
+## ✅ Checklist de deploy
+
+Antes de publicar:
+
+- Configure `SECRET_KEY` com valor forte e exclusivo.
+- Configure `RESEND_API_KEY`.
+- Configure `EMAIL_FROM` com remetente autorizado no Resend.
+- Confirme que os leads chegam em `innovaideia2023@gmail.com`.
+- Verifique `GET /api/health` após o deploy.
+- Confirme que o GitHub Actions está verde.
+- Mantenha `FLASK_DEBUG=false` em produção.
+- Não versione arquivos `.env` ou segredos.
+
+### Smoke test pós-deploy
+
+```bash
+curl -i https://SEU-DOMINIO/api/health
+```
+
+Resposta esperada:
+
+```json
+{"service":"innovaideia-institucional","status":"ok"}
+```
