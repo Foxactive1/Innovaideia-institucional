@@ -91,8 +91,16 @@ def _email_error_hint(exc: Exception) -> str:
         return "smtp_app_password_required"
     if "timed out" in msg or "timeout" in msg:
         return "smtp_timeout"
+    if "connection refused" in msg:
+        return "smtp_connection_refused"
+    if "network is unreachable" in msg:
+        return "smtp_network_unreachable"
     if "name or service not known" in msg or "getaddrinfo failed" in msg:
         return "smtp_dns_error"
+    if "ssl" in exc.__class__.__name__.lower() or "ssl" in msg:
+        return "smtp_ssl_error"
+    if isinstance(exc, OSError):
+        return "smtp_network_error"
 
     return "smtp_error"
 
@@ -254,9 +262,15 @@ def api_contato():
             error_hint,
             exc,
         )
+        safe_detail = str(exc)
+        if len(safe_detail) > 180:
+            safe_detail = safe_detail[:180] + "..."
+
         return jsonify({
             "erro": "Não foi possível enviar sua mensagem agora. Tente novamente em instantes.",
             "codigo": error_hint,
+            "tipo": exc.__class__.__name__,
+            "detalhe": safe_detail,
         }), 502
 
 
