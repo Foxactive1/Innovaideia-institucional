@@ -24,6 +24,7 @@ if not _secret:
     _secret = secrets.token_hex(32)
     logger.warning("SECRET_KEY não definida — gerada aleatoriamente.")
 app.config["SECRET_KEY"] = _secret
+app.config["MAX_CONTENT_LENGTH"] = 64 * 1024  # 64 KB por requisição
 
 limiter = Limiter(
     key_func=get_remote_address,
@@ -145,12 +146,24 @@ def api_faq():
     return jsonify(FAQ)
 
 
+@app.route("/api/health")
+@limiter.exempt
+def api_health():
+    return jsonify({
+        "status": "ok",
+        "service": "innovaideia-institucional",
+    }), 200
+
+
 @app.route("/api/contato", methods=["POST"])
 @limiter.limit("5 per minute")
 def api_contato():
     """Recebe um lead e envia as notificações usando a API do Resend."""
+    if not request.is_json:
+        return jsonify({"erro": "Content-Type deve ser application/json"}), 415
+
     dados = request.get_json(silent=True)
-    if not dados:
+    if not isinstance(dados, dict):
         return jsonify({"erro": "Requisição deve conter JSON válido"}), 400
 
     nome = str(dados.get("nome", "")).strip()
@@ -161,6 +174,15 @@ def api_contato():
     empresa = str(dados.get("empresa", "")).strip()
     newsletter = bool(dados.get("newsletter", False))
     website = str(dados.get("website", "")).strip()
+
+    # Limites defensivos para evitar payloads excessivos e abuso do serviço de e-mail.
+    nome = nome[:120]
+    email = email[:254]
+    telefone = telefone[:40]
+    empresa = empresa[:160]
+    interesse = interesse[:120]
+    mensagem = mensagem[:5000]
+    website = website[:255]
 
     # Honeypot anti-bot: usuários reais não veem nem preenchem este campo.
     # Retornamos sucesso genérico para não revelar a regra de proteção.
@@ -238,4 +260,5 @@ def internal_server_error(e):
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=5000)
+    debug = os.environ.get("FLASK_DEBUG", "").lower() in {"1", "true", "yes"}
+    app.run(debug=debug, host="0.0.0.0", port=int(os.environ.get("PORT", "5000")))
