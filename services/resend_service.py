@@ -6,7 +6,7 @@ import resend
 
 RESEND_API_KEY = os.getenv("RESEND_API_KEY")
 EMAIL_FROM = os.getenv("EMAIL_FROM", "InNovaIdeia <onboarding@resend.dev>")
-EMAIL_TO = os.getenv("EMAIL_TO", "innovaideia2023@gmail.com")
+LEAD_EMAIL = "innovaideia2023@gmail.com"
 
 if RESEND_API_KEY:
     resend.api_key = RESEND_API_KEY
@@ -56,7 +56,7 @@ def enviar_lead(nome, email, empresa, telefone, interesse, mensagem, newsletter=
 
     lead = resend.Emails.send({
         "from": EMAIL_FROM,
-        "to": [EMAIL_TO],
+        "to": [LEAD_EMAIL],
         "reply_to": email,
         "subject": f"Novo lead — {interesse} — {nome}",
         "html": _email_html(nome, email, empresa, telefone, interesse, mensagem, newsletter),
