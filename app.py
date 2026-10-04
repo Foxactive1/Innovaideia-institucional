@@ -81,28 +81,26 @@ def _email_error_hint(exc: Exception) -> str:
     """Classifica erros comuns do provedor sem expor credenciais."""
     msg = str(exc).lower()
 
-    if "smtp_app_password" in msg or "password not configured" in msg:
-        return "smtp_app_password_missing"
-    if "smtp_email" in msg:
-        return "smtp_email_missing"
-    if "username and password not accepted" in msg or "authentication failed" in msg:
-        return "smtp_authentication_failed"
-    if "application-specific password required" in msg or "app password" in msg:
-        return "smtp_app_password_required"
+    if "configuração gmail oauth ausente" in msg:
+        return "gmail_oauth_config_missing"
+    if "invalid_grant" in msg:
+        return "gmail_oauth_invalid_grant"
+    if "invalid_client" in msg:
+        return "gmail_oauth_invalid_client"
+    if "access_denied" in msg or "insufficient authentication scopes" in msg:
+        return "gmail_oauth_scope_error"
+    if "401" in msg:
+        return "gmail_oauth_unauthorized"
+    if "403" in msg:
+        return "gmail_api_forbidden"
+    if "429" in msg:
+        return "gmail_api_rate_limit"
     if "timed out" in msg or "timeout" in msg:
-        return "smtp_timeout"
-    if "connection refused" in msg:
-        return "smtp_connection_refused"
-    if "network is unreachable" in msg:
-        return "smtp_network_unreachable"
-    if "name or service not known" in msg or "getaddrinfo failed" in msg:
-        return "smtp_dns_error"
-    if "ssl" in exc.__class__.__name__.lower() or "ssl" in msg:
-        return "smtp_ssl_error"
-    if isinstance(exc, OSError):
-        return "smtp_network_error"
+        return "gmail_api_timeout"
+    if "gmail api recusou" in msg:
+        return "gmail_api_error"
 
-    return "smtp_error"
+    return "email_provider_error"
 
 
 @app.route("/")
@@ -192,7 +190,7 @@ def api_email_health():
 @app.route("/api/contato", methods=["POST"])
 @limiter.limit("5 per minute")
 def api_contato():
-    """Recebe um lead e envia as notificações usando a API do Resend."""
+    """Recebe um lead e envia as notificações usando a Gmail API via OAuth 2.0."""
     if not request.is_json:
         return jsonify({"erro": "Content-Type deve ser application/json"}), 415
 
